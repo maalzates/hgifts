@@ -19,12 +19,17 @@ class CampaignSeeder extends Seeder
      */
     public function run()
     {
-        Campaign::factory(10);
+        Campaign::factory(10)->create();
+
+        // Seeding pivot table with custom field 'count', for each campaign record, we will access the relationship and add data
         foreach(Campaign::all() as $campaign) {
+            // Instantiate Faker
             $faker = Faker::create();
+            // Obtain item id's array randomly 
             $items = Item::inRandomOrder()->take(rand(1,3))->pluck('id');
+            // Access to pivot table and passing the custom field as second argument in attach method
             $campaign->items()->attach($items, [
-                'amount' => $faker->randomNumber(3, false),
+                'count' => $faker->randomNumber(3, false),
             ]);
         };
 

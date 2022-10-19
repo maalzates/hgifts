@@ -17,8 +17,8 @@ class CreateCampaignItemTable extends Migration
             $table->id();
            
             // Foreign Keys
-            $table->foreignId('campaign_id')->constrined();
-            $table->foreignId('user_id')->constrined();
+            $table->foreignId('campaign_id')->references('id')->on('campaigns')->onDelete('cascade');
+            $table->foreignId('item_id')->references('id')->on('items')->onDelete('cascade');
 
             $table->timestamps();
         });
