@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
-use App\Http\Requests\StoreItemRequest;
+use Illuminate\Http\Request;
 use App\Http\Requests\UpdateItemRequest;
 use Inertia\Inertia;
 
@@ -16,7 +16,9 @@ class ItemController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Items/Index');
+        $items = Item::latest('id')->paginate();
+      
+        return Inertia::render('Items/Index', compact('items'));
     }
 
     /**
@@ -26,18 +28,26 @@ class ItemController extends Controller
      */
     public function create()
     {
-        //
+        
+        return Inertia::render('Items/Create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreItemRequest  $request
+     * @param Illuminate\Http\Request;  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreItemRequest $request)
+    public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required',
+            'unit_price' => 'required',
+            'units_owned' => 'required'
+        ]);
+        Item::create($data);
+
+        return redirect()->route('items.index');
     }
 
     /**
@@ -59,7 +69,7 @@ class ItemController extends Controller
      */
     public function edit(Item $item)
     {
-        //
+        return Inertia::render('Items/Edit', compact('item'));
     }
 
     /**
@@ -69,9 +79,17 @@ class ItemController extends Controller
      * @param  \App\Models\Item  $item
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateItemRequest $request, Item $item)
+    public function update(Request $request, Item $item)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required',
+            'unit_price' => 'required',
+            'units_owned' => 'required'
+        ]);
+
+        $item->update($data);
+
+        return redirect()->route('items.index', $item);
     }
 
     /**
@@ -82,6 +100,7 @@ class ItemController extends Controller
      */
     public function destroy(Item $item)
     {
-        //
+        $item->delete();
+        return redirect()->route('items.index');
     }
 }

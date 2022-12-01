@@ -19,7 +19,7 @@ class CampaignSeeder extends Seeder
      */
     public function run()
     {
-        Campaign::factory(10)->create();
+        Campaign::factory(40)->create();
 
         // Seeding pivot table with custom field 'count', for each campaign record, we will access the relationship and add data
         foreach(Campaign::all() as $campaign) {
@@ -31,6 +31,21 @@ class CampaignSeeder extends Seeder
             $campaign->items()->attach($items, [
                 'count' => $faker->randomNumber(3, false),
             ]);
+
+            $campaign->users()->attach([
+                rand(1,2),
+                rand(3,4),
+                rand(5,6),
+                rand(7,8),
+                rand(9,10),
+                rand(11,12),
+                rand(13,14),
+                rand(15,16),
+                rand(17,18),
+                rand(19,20),
+            ]);
+
+
         };
 
     }

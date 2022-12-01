@@ -1,9 +1,11 @@
 // resources/js/app.js
 require("./bootstrap");
 
+
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/inertia-vue3";
 import { InertiaProgress } from "@inertiajs/progress";
+
 
 const appName =
     window.document.getElementsByTagName("title")[0]?.innerText || "Laravel";

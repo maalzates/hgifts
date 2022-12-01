@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\ItemController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
 
 
 /*
@@ -40,6 +42,21 @@ Route::get('items/{item}/edit', [ItemController::class, 'edit'])->name('items.ed
 Route::put('items/{item}', [ItemController::class, 'update'])->name('items.update');
 // Delete record route
 Route::delete('items/{item}', [ItemController::class, 'destroy'])->name('items.destroy');
+
+
+// CAMPAIGNS
+// List show
+Route::get('/campaigns', [CampaignController::class, 'index'])->name('campaigns.index');
+// Create record route
+Route::get('/campaigns/create', [CampaignController::class, 'create'])->name('campaigns.create');
+// Store the created record route
+Route::post('campaigns', [CampaignController::class, 'store'])->name('campaigns.store');
+// Edit view route
+Route::get('campaigns/{campaign}/edit', [CampaignController::class, 'edit'])->name('campaigns.edit');
+// Update edited information route
+Route::put('campaigns/{campaign}', [CampaignController::class, 'update'])->name('campaigns.update');
+// Delete record route
+Route::delete('campaigns/{campaign}', [CampaignController::class, 'destroy'])->name('campaigns.destroy');
 
 
 

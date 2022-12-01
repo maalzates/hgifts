@@ -16,10 +16,9 @@ class CreateCampaignsTable extends Migration
         Schema::create('campaigns', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            
-            $table->enum('status',['Preparing', 'Ready', 'Dispatched'])->default('Preparing');
-            $table->date('dispatch_date');
-            $table->date('delivery_date');
+            $table->enum('status',['preparing', 'ready', 'dispatched'])->default('preparing');
+            $table->date('dispatch_date')->default(date("Y-m-d H:i:s"));
+            $table->date('delivery_date')->default(date("Y-m-d H:i:s"));
             
             $table->timestamps();
         });

@@ -1,5 +1,5 @@
 <script setup>
-import Modal from './Modal.vue';
+import Modal from '../../Jetstream/Modal.vue';
 import {ref} from 'vue'
 
 const emit = defineEmits(['close']);
@@ -31,7 +31,7 @@ const toggleModal = () => {
 
 <template>
 <div>
-    <button class="text-blue-500 background-transparent font-bold px-3 py-1 text-xs outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" @click="toggleModal">Box Content</button>
+    <button class="text-blue-500 background-transparent font-bold px-3 py-1 text-base outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" @click="toggleModal">Users</button>
     <Modal
         :show="show"
         :max-width="maxWidth"

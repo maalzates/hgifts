@@ -14,7 +14,7 @@ class AddCountToCampaignItemTable extends Migration
     public function up()
     {
         Schema::table('campaign_item', function (Blueprint $table) {
-            $table->string('count');
+            $table->string('count')->default('0');
         });
     }
 
