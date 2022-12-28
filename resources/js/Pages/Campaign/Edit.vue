@@ -2,7 +2,7 @@
     <app-layout>
     <template #header>
       <h2 class="flex font-semibold text-xl text-gray-800 leading-tight"> Edit Campaign - {{form.name}}</h2>
-      {{this.form}}
+      <!-- {{this.users}} -->
     </template>
     <!-- Edit form -->
     <div class="bg-white px-6 py-8 rounded-lg shadow">
@@ -42,7 +42,7 @@
                 </label>
             </div>
                             <!-- ADD ITEMS {{form.items}} -->
-            <add-item-modal>
+            <AddItemModal>
                 <template #title>
                     <h2>Items in this Campaign Box</h2>
                 </template>
@@ -77,8 +77,14 @@
                         </table>
                     </label>
                 </template>
-            </add-item-modal>
-
+            </AddItemModal>
+                        <!-- MultiSelect -->
+            <div>
+                <VueMultiselect v-model="selected_users" :options="options" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Add users" label="name" track-by="name" :preselect-first="true">
+                    <template><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} Selected Users</span></template>
+                </VueMultiselect>
+                <!-- {{this.form.users}} -->
+            </div>
         </div>
         <div class="flex justify-end">
             <button  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3" @click="update"> Update </button>
@@ -91,13 +97,15 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import Input from "../../Jetstream/Input.vue";
 import AddItemModal from '@/Jetstream/AddItemModal.vue';
-import axios from 'axios'
+import axios from 'axios';
+import VueMultiselect from 'vue-multiselect';
 
 export default {
     components: {
         AppLayout,
         Input,
-        AddItemModal
+        AddItemModal,
+        VueMultiselect
     },
     props: {
         items: { 
@@ -111,6 +119,14 @@ export default {
         },
         campaign:{
           type: Object
+        },
+        // All available users. This will help us to choose any user we want from the users database in our MultipleSelect Component
+        users: {
+            type: Object,
+        },
+        // Only users which are subscribed to this campaign, this will help us to render in the edit view, the input with the already suscribed users selected. 
+        users_subscribed: {
+            type: Object,
         }
     },
     data(){
@@ -119,7 +135,8 @@ export default {
               ...this.campaign,
               items: this.items_pivot
             },
-
+            options: this.users,
+            selected_users: this.users_subscribed,
         }
     },
     methods:{
@@ -130,15 +147,23 @@ export default {
             this.form.items.splice(index, 1)
         },
         update(){
-            // axios.put(this.route('campaigns.update'),this.form)
+        //    let items = this.form.items;
+        //    console.log(items)
+            let uids = this.selected_users.map((user) => user.id); // Get all user ids of the curren editing campaign
+            this.form.users = uids; // Attaching user id's to the form that will be send in the request. 
+
+            // console.log(this.form.items);  
+            
+            this.$inertia.put(this.route('campaigns.update', this.campaign), this.form);
+            
+            // axios.put(this.route('campaigns.update', this.campaign),this.form)
             // .then(res => {
             //     console.log(res)
             // })
             // .catch(err => {
             //     console.error(err); 
             // })
-            this.$inertia.put(this.route('campaigns.update', this.items), this.form);
-        }
+            }
     }
 }
 </script>

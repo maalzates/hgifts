@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\CampaignController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -51,6 +53,8 @@ Route::get('/campaigns', [CampaignController::class, 'index'])->name('campaigns.
 Route::get('/campaigns/create', [CampaignController::class, 'create'])->name('campaigns.create');
 // Store the created record route
 Route::post('campaigns', [CampaignController::class, 'store'])->name('campaigns.store');
+// Show view route
+Route::get('campaigns/{campaign}/show', [CampaignController::class, 'show'])->name('campaigns.show');
 // Edit view route
 Route::get('campaigns/{campaign}/edit', [CampaignController::class, 'edit'])->name('campaigns.edit');
 // Update edited information route
@@ -58,7 +62,16 @@ Route::put('campaigns/{campaign}', [CampaignController::class, 'update'])->name(
 // Delete record route
 Route::delete('campaigns/{campaign}', [CampaignController::class, 'destroy'])->name('campaigns.destroy');
 
+// COMMENTS 
+Route::get('/comments/create', [CommentController::class, 'create'])->name('comments.create');
+//Store
+Route::post('comments', [CommentController::class, 'store'])->name('comments.store');
+// Delete
+Route::delete('comments', [CampaignController::class, 'destroy'])->name('comments.destroy');
 
+// USERS
+//Store
+// Route::post('users', [UserController::class, 'store'])->name('users.store');
 
 Route::middleware([
     'auth:sanctum',

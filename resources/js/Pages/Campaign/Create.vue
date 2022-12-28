@@ -40,7 +40,7 @@
                 </label>
             </div>
                             <!-- ADD ITEMS {{form.items}} -->
-            <add-item-modal>
+            <AddItemModal>
                 <template #title>
                     <h2>Items in this Campaign Box</h2>
                 </template>
@@ -76,10 +76,24 @@
                         </table>
                     </label>
                 </template>
-            </add-item-modal>
+            </AddItemModal>
+            <!-- MultiSelect -->
+            <div>
+                <VueMultiselect v-model="selected_users" :options="options" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Add users" label="name" track-by="name" :preselect-first="true">
+                    <template><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} Selected Users</span></template>
+                </VueMultiselect>
+            </div>
+             <!-- <div> -->
+                <!-- <vue-multi-select v-model="value" :options="options"></vue-multi-select> -->
+                <!-- <multi-select v-model="value" :options="options"></multi-select> -->
+                <!-- <VueMultiselect v-model="selected" :options="options"></VueMultiselect> -->
+            <div>Selected users {{selected_users}} </div>
+            <div>Form users id's {{form.users}} </div>
+                
+            <!-- </div> -->
         </div>
         <div class="flex justify-end">
-            <button  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3" @click="store"> Crear</button>
+            <button  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3" @click="store"> Create new</button>
         </div>
     </div>
   </app-layout>
@@ -89,18 +103,26 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import Input from "../../Jetstream/Input.vue";
 import AddItemModal from '@/Jetstream/AddItemModal.vue';
-import axios from 'axios'
+import axios from 'axios';
+import VueMultiselect from 'vue-multiselect'
+
+
+
 
 export default {
     components: {
         AppLayout,
         Input,
         AddItemModal,
+        VueMultiselect
     },
     props: {
         items: {
             type: Object
-        }       
+        },
+        users: {
+            type: Object
+        }
     },
     data(){
         return {
@@ -111,8 +133,10 @@ export default {
                 ],
                 dispatch_day: '',
                 delivery_day: '',
-                users: []
-            }
+                users:[]
+            },
+            selected_users: [],
+            options: this.users,
         }
     },
     methods:{
@@ -122,15 +146,22 @@ export default {
         removeItem(index){
             this.form.items.splice(index, 1)
         },
-        store(){
-            axios.post(this.route('campaigns.store'),this.form)
+         store(){
+
+            // Filtering array of users by id, and attaching to form.
+            let uids = this.selected_users.map((user) => user.id);
+            this.form.users = uids;
+  
+            axios.post(this.route('campaigns.store', this.campaign),this.form)
             .then(res => {
                 console.log(res)
             })
             .catch(err => {
                 console.error(err); 
             })
-            // this.$inertia.post(this.route('campaigns.store'), this.form);
+
+
+        //    this.$inertia.post(this.route('campaigns.store'), this.form);
         }
     }
 }

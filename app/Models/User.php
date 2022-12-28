@@ -10,6 +10,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Campaign;
+use App\Models\Comment;
 
 class User extends Authenticatable
 {
@@ -61,6 +62,10 @@ class User extends Authenticatable
     ];
 
     public function campaigns(){
-        return $this->belongsToMany(Campaign::class);
+        return $this->belongsToMany(Campaign::class)->withTimestamps()->withPivot('score');;
+    }
+
+    public function comments(){
+        return $this->hasMany(Comment::class);
     }
 }

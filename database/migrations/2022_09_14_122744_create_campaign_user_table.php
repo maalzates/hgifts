@@ -15,10 +15,11 @@ class CreateCampaignUserTable extends Migration
     {
         Schema::create('campaign_user', function (Blueprint $table) {
             $table->id();
-           
+            $table->unsignedBigInteger('user_id');
+
             // Foreign Keys
-            $table->foreignId('campaign_id')->constrined();
-            $table->foreignId('user_id')->constrined();
+            $table->foreignId('campaign_id')->references('id')->on('campaigns')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
             $table->timestamps();
         });

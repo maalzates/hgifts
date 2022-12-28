@@ -44,7 +44,7 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <Link :href="route('items.edit', item)" class="text-indigo-600 hover:text-indigo-900">
-                                            <i class="fas fa-chevron-right"></i>
+                                            <i class="fas fa-regular fa-pen-to-square"></i>
                                         </Link>
                                     </td>
                                 </tr>

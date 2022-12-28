@@ -14,6 +14,9 @@
         
         <!-- Fonts -->
         <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
+        <script src="https://kit.fontawesome.com/87ca8760d2.js" crossorigin="anonymous"></script>
+        
+        <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.6/dist/vue-multiselect.min.css">
 
         <!-- Scripts -->
         @routes
