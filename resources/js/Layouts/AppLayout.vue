@@ -58,7 +58,7 @@ const logout = () => {
                                     Campaigns
                                 </JetNavLink>
                             </div>
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex" v-if="can('items.index')">
                                 <JetNavLink :href="route('items.index')" :active="route().current('items.index')">
                                     Items
                                 </JetNavLink>

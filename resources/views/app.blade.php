@@ -22,6 +22,12 @@
         @routes
         <script src="{{ mix('js/app.js')  . '?version='. Str::random() }}" defer></script>
         @inertiaHead
+        <script type="text/javascript">
+            window.Laravel = {
+                csrfToken: "{{ csrf_token() }}",
+                jsPermissions: {!! auth()->check()?auth()->user()->jsPermissions():null !!}
+            }
+        </script>
     </head>
     <body class="font-sans antialiased">
         @inertia

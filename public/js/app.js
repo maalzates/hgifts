@@ -24016,6 +24016,7 @@ var _hoisted_8 = {
   "class": "hidden space-x-8 sm:-my-px sm:ml-10 sm:flex"
 };
 var _hoisted_9 = {
+  key: 0,
   "class": "hidden space-x-8 sm:-my-px sm:ml-10 sm:flex"
 };
 var _hoisted_10 = {
@@ -24134,7 +24135,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Campaigns ")];
     }),
     _: 1 /* STABLE */
-  }, 8 /* PROPS */, ["href", "active"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetNavLink"], {
+  }, 8 /* PROPS */, ["href", "active"])]), _ctx.can('items.index') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetNavLink"], {
     href: _ctx.route('items.index'),
     active: _ctx.route().current('items.index')
   }, {
@@ -24142,7 +24143,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Items ")];
     }),
     _: 1 /* STABLE */
-  }, 8 /* PROPS */, ["href", "active"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetNavLink"], {
+  }, 8 /* PROPS */, ["href", "active"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetNavLink"], {
     href: _ctx.route('users.index'),
     active: _ctx.route().current('users.index')
   }, {
@@ -27639,9 +27640,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 /* harmony import */ var _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @inertiajs/inertia-vue3 */ "./node_modules/@inertiajs/inertia-vue3/dist/index.js");
 /* harmony import */ var _inertiajs_progress__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @inertiajs/progress */ "./node_modules/@inertiajs/progress/dist/index.js");
+/* harmony import */ var laravel_permission_to_vuejs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! laravel-permission-to-vuejs */ "./node_modules/laravel-permission-to-vuejs/index.js");
 var _window$document$getE;
 // resources/js/app.js
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
+
 
 
 
@@ -27670,7 +27673,7 @@ var appName = ((_window$document$getE = window.document.getElementsByTagName("ti
       }
     })
     // .mixin({ components: {VueMultiselect}})
-    .mount(el);
+    .use(laravel_permission_to_vuejs__WEBPACK_IMPORTED_MODULE_3__["default"]).mount(el);
   }
 });
 _inertiajs_progress__WEBPACK_IMPORTED_MODULE_2__.InertiaProgress.init({
@@ -28581,6 +28584,78 @@ var bind = __webpack_require__(/*! function-bind */ "./node_modules/function-bin
 
 module.exports = bind.call(Function.call, Object.prototype.hasOwnProperty);
 
+
+/***/ }),
+
+/***/ "./node_modules/laravel-permission-to-vuejs/index.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/laravel-permission-to-vuejs/index.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  install: (app, options) => {
+    app.config.globalProperties.can = function(value){
+    	if(window.Laravel.jsPermissions == 0){
+    		return false
+    	}
+		let permissions = window.Laravel.jsPermissions.permissions
+		let _return = false
+		if(!Array.isArray(permissions)){
+			return false
+		}
+		if(value.includes('|')){
+			value.split('|').forEach(function (item) {
+				if(permissions.includes(item.trim())){
+					_return = true
+				}
+			})
+		}else if(value.includes('&')){
+			_return = true
+			value.split('&').forEach(function (item) {
+				if(!permissions.includes(item.trim())){
+					_return = false
+				}
+			})
+		}else{
+			_return = permissions.includes(value.trim())
+		}
+		return _return
+	}
+    app.config.globalProperties.is = function(value){
+    	if(window.Laravel.jsPermissions == 0){
+    		return false
+    	}
+		let roles = window.Laravel.jsPermissions.roles
+		let _return = false
+		if(!Array.isArray(roles)){
+			return false
+		}
+		if(value.includes('|')){
+			value.split('|').forEach(function (item) {
+				if(roles.includes(item.trim())){
+					_return = true
+				}
+			})
+		}else if(value.includes('&')){
+			_return = true
+			value.split('&').forEach(function (item) {
+				if(!roles.includes(item.trim())){
+					_return = false
+				}
+			})
+		}else{
+			_return = roles.includes(value.trim())
+		}
+		return _return
+	}
+  }
+});
 
 /***/ }),
 
