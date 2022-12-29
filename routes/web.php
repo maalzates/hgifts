@@ -70,8 +70,8 @@ Route::post('comments', [CommentController::class, 'store'])->name('comments.sto
 Route::delete('comments', [CampaignController::class, 'destroy'])->name('comments.destroy');
 
 // USERS
-//Store
-// Route::post('users', [UserController::class, 'store'])->name('users.store');
+Route::resource('users', UserController::class)->names('users');
+
 
 Route::middleware([
     'auth:sanctum',

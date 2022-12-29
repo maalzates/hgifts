@@ -63,6 +63,11 @@ const logout = () => {
                                     Items
                                 </JetNavLink>
                             </div>
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <JetNavLink :href="route('users.index')" :active="route().current('users.index')">
+                                    Users
+                                </JetNavLink>
+                            </div>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -162,6 +167,11 @@ const logout = () => {
                     <div class="pt-2 pb-3 space-y-1">
                         <JetResponsiveNavLink :href="route('items.index')" :active="route().current('items.index')">
                             Items
+                        </JetResponsiveNavLink>
+                    </div>
+                    <div class="pt-2 pb-3 space-y-1">
+                        <JetResponsiveNavLink :href="route('users.index')" :active="route().current('users.index')">
+                            Users
                         </JetResponsiveNavLink>
                     </div>
 
