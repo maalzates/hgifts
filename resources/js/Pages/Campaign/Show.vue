@@ -1,7 +1,7 @@
 <template>
   <app-layout>
     <template #header>
-      <h2 class="flex font-semibold text-xl text-gray-800 leading-tight"> Campaign - {{campaign.name}}</h2>    
+      <h2 class="flex font-semibold text-xl text-gray-800 leading-tight"> Campaign - {{campaign.name}}</h2> 
       <!-- {{this.users}} -->
     </template>
         <div class="overflow-hidden bg-white shadow sm:rounded-lg">
@@ -33,7 +33,7 @@
                 </div>
                 <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 border-b-2">
                     <dt class="text-sm font-medium text-gray-500">Rating</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><StarRating v-model:rating="form.average" :active-on-click="true" read-only	rounded-corners="true" :star-size="30" :padding="1" ></StarRating></dd>
+                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><StarRating v-model:rating="form.average" :active-on-click="true" read-only rounded-corners="true" :star-size="30" :padding="1" ></StarRating></dd>
                 </div>
                                                     
                 <!-- COMMENT - RATING BUTTONS -->
@@ -61,7 +61,7 @@
 
                 <!-- RATING SECTION -->
 
-                <RatingModal>
+                <RatingModal v-if="!this.has_rated">
                     <template #title> Rating</template>
                     <template #content>
                         <StarRating v-model:rating="form.score" :active-on-click="true" clearable ></StarRating>    
@@ -76,27 +76,19 @@
 
                 <!-- COMMENTs SECTION -->
                 <!-- Card -->
-                <div class="flex flex-col rounded shadow-sm bg-white overflow-hidden">
+                <div v-for="comment in this.component_comments" :key="comment.id" class="flex flex-col rounded shadow-sm bg-white overflow-hidden"  >
                 <!-- Card Body -->
-                <div class="p-5 lg:p-6 grow w-full space-y-4">
+                <div class="p-5 lg:p-6 grow w-full space-y-4 border-b purple">
                     <!-- Media Object: Comment -->
                     <div class="flex space-x-4">
                     <!-- Avatar -->
                     <img src="https://cdn.tailkit.com/media/placeholders/avatar-mEZ3PoFGs_k-160x160.jpg" alt="User Avatar" class="flex-none inline-block w-8 h-8 sm:w-12 sm:h-12 rounded-full mt-1">
 
                     <!-- Content -->
-                    <div class="grow text-sm">
-                        <p class="mb-1">
-                        <a href="javascript:void(0)" class="font-semibold text-blue-600 hover:text-blue-400">Lori Grant</a>
-                        I just started a new Tailwind CSS based project and I find it very refreshing. Could you suggest any tools to help me out?
-                        </p>
-                        <p class="space-x-2">
-                        <a href="javascript:void(0)" class="text-gray-500 hover:text-gray-400">
-                            Like
-                        </a>
-                        <a href="javascript:void(0)" class="text-gray-500 hover:text-gray-400">
-                            Reply
-                        </a>
+                    <div class="grow text-sm flex flex-column align-center">
+                        <p class="mb-1 align-self">
+                        <a href="javascript:void(0)" class="font-semibold text-blue-600 hover:text-blue-400">{{comment.user.name}}</a>
+                        {{comment.content}}
                         </p>
                     </div>
                     <!-- END Content -->
@@ -109,7 +101,6 @@
                 </dl>
             </div>
         </div>
-        {{current_user}}
   </app-layout>
 </template>
 
@@ -136,8 +127,17 @@ export default {
         users: {
             type: Object,
         },
+        comments: {
+            type: Object
+        },
         current_user: {
             type: Object
+        },
+        average: {
+            type: Number
+        },
+        has_rated: {
+            type: Boolean
         }
     },
     data(){
@@ -150,20 +150,41 @@ export default {
                     user_id: this.current_user.id,
                 },
                 score: '',
-                average: 5,
-                user: this.current_user.id,
-                is_rating: false,
-            }
+                average: this.average,
+                is_rating: false, // We will use for the Controller to know if a raiting is being sent. 
+            },
+            component_comments: this.comments,
         }
     },
     methods:{
         rate(){
-            this.form.is_rating = true;
-            this.$inertia.put(this.route('campaigns.update', this.campaign), this.form);
-            this.form.is_rating = false;
+            this.form.is_rating = true; // This will tell the controller that we're updating the rating instead the campaign itself.
+            this.form.score = this.form.score.toString();// We need to convert the score to string, since mysql enum values are 0-indexed. In order to save the actual 5, it needs to be a String.
+            // this.$inertia.put(this.route('campaigns.update', this.campaign), this.form);
+            axios.put(`/campaigns/${this.campaign.id}`, {
+                ...this.form,
+                 _method: 'PUT',    
+            })
+            .then((response) => {
+                console.log(response);
+                window.location.reload();
+                this.form.is_rating = false;
+            })
+            .catch(error => {
+                console.log(error);
+            });
         },
-        sendComment(){
-            this.$inertia.post(this.route('comments.store'), this.form.comment);
+        sendComment() {
+            // this.$inertia.post(this.route('comments.store'), this.form.comment);
+            axios.post('/comments', this.form.comment)
+            .then(response => {
+                window.location.reload();
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+                // Handle the error here
+            });
         }
     }
 

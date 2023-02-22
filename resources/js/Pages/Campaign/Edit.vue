@@ -48,7 +48,7 @@
                 </template>
                 <template #content> 
                     <div class="flex">                           
-                        <button class=" mr-3 justify-end text-white-500 bg-violet-600 font-bold px-3 py-2 text-white outline-none focus:outline-none mr-1 mb-1 rounded ease-linear transition-all duration-150" @click="addItem">Agregar item </button>
+                        <button class=" mr-3 justify-end text-white-500 bg-violet-600 font-bold px-3 py-2 text-white outline-none focus:outline-none mr-1 mb-1 rounded ease-linear transition-all duration-150" @click="addItem">Add item </button>
                     </div>
                     <label>
                         <!-- <table v-for="(item, i) in items" :key="i" > -->
@@ -100,6 +100,7 @@ import AddItemModal from '@/Jetstream/AddItemModal.vue';
 import axios from 'axios';
 import VueMultiselect from 'vue-multiselect';
 
+
 export default {
     components: {
         AppLayout,
@@ -141,10 +142,37 @@ export default {
     },
     methods:{
         addItem(){
-            this.form.items.push({item_id:'', count:{}})
+            this.form.items.push({item_id:'', count:''})
         },
         removeItem(index){
             this.form.items.splice(index, 1)
+        },
+        isDuplicated(){
+            // Checking if the items selected are repeated
+            let items_array = [...this.form.items].map( (item) => item.item_id);
+            let repeated_items = items_array.some( (item, index) => items_array.indexOf(item) != index);
+            return repeated_items;
+        },
+        isNameOrAmountEmpty(){
+            // Check if some of  the selected items is empty
+            let items_array = [...this.form.items];
+            let validation = items_array.some((item) => Object.values(item).some( value => value === "" ));
+            console.log(items_array);
+            return validation;
+        },
+        repeatedError(){
+            this.$swal.fire({
+                icon: 'error',
+                title: 'Add Items Error',
+                text: 'Avoid selecting a repeated item, if you need more of one item, please increase the AMOUNT field.'
+            })
+        },
+        emptyError(){
+            this.$swal.fire({
+                icon: 'error',
+                title: 'Add Items Error',
+                text: 'Please make sure ITEM and COUNT fields are filled for all items.'
+            })
         },
         update(){
         //    let items = this.form.items;
@@ -153,9 +181,18 @@ export default {
             this.form.users = uids; // Attaching user id's to the form that will be send in the request. 
 
             // console.log(this.form.items);  
+
+            if (this.isDuplicated()) {
+                this.repeatedError();
+            } else if (this.isNameOrAmountEmpty()) {
+                this.emptyError();
+            } else {
+                    
+                this.$inertia.put(this.route('campaigns.update', this.campaign), this.form);
+            }
+             
             
-            this.$inertia.put(this.route('campaigns.update', this.campaign), this.form);
-            
+
             // axios.put(this.route('campaigns.update', this.campaign),this.form)
             // .then(res => {
             //     console.log(res)

@@ -33,7 +33,8 @@
           :href="link.url"
           class="relative inline-flex items-center px-4 py-2 border text-sm font-medium"
           :class="link.active ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'"
-          v-html="link.label"></Link>
+          v-html="link.label"
+          ></Link>
 
           </template>
           <!-- Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" -->
@@ -55,6 +56,9 @@ export default {
   },
   components:{
     Link
+  },
+  methods:{
+
   }
 }
 </script>

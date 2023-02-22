@@ -12,11 +12,11 @@ class Comment extends Model
     use HasFactory;
     protected $fillable = ['content', 'campaign_id', 'user_id'];
 
-    public function campaigns(){
+    public function campaign(){
         return $this->belongsTo(Campaign::class);
     }
 
-    public function users(){
+    public function user(){
         return $this->belongsTo(User::class);
     }
     

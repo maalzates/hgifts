@@ -8,7 +8,9 @@ use App\Http\Requests\UpdateCampaignRequest;
 use App\Models\Comment;
 use App\Models\Item;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 
@@ -23,8 +25,31 @@ class CampaignController extends Controller
     {
         $current_user = Auth::user();
 
-        $campaigns = Campaign::with('items', 'users')->paginate();
-        return Inertia::render('Campaign/Index', compact('campaigns', 'current_user'));
+        //  This will display the list of campaigns for admin roles.
+        $all_campaigns = Campaign::with('items', 'users')->latest('id')->paginate();
+
+        // Anyone who's not admin, will see filtered results. 
+        $active_campaigns = Campaign::with('items', 'users')->whereDate('dispatch_date', '>', Carbon::today()->toDateString())->paginate();
+
+        $subscribed_campaigns = Campaign::with('items', 'users')->whereHas('users', function($users) {
+            $users->where(function($query) {
+                $query->whereName(Auth::user()->name);
+                });
+           })->paginate();
+
+           
+        $active_or_suscribed =  Campaign::with('items', 'users')->whereHas('users', function($users) {
+            $users->where(function($query) {
+                $query->whereName(Auth::user()->name);
+                })
+                ->orWhere(function($query) {
+                    $query->whereDate('dispatch_date', '>', Carbon::today()->toDateString());
+                 });
+           })->paginate();
+           
+        $is_admin = Gate::allows('admin');
+
+        return Inertia::render('Campaign/Index', compact('all_campaigns', 'current_user', 'active_campaigns', 'subscribed_campaigns', 'active_or_suscribed', 'is_admin'));
     }
 
     /**
@@ -59,6 +84,7 @@ class CampaignController extends Controller
             $campaign->items()->attach($item['id'], ['count' => $item['count']]);
         };
 
+        return $campaign;
 
     }
 
@@ -73,8 +99,39 @@ class CampaignController extends Controller
     {
         $current_user = Auth::user();
         $users = $campaign->users()->get();
+        $comments = $campaign->comments()->get();
 
-        return Inertia::render('Campaign/Show', compact('campaign', 'users', 'current_user'));
+        // Adding user property to each comment. This will help us in the view to render the propper information.
+
+        // By default, eloquent's belongsTo relation, search for the foreign key, using the name given to the relation
+        // plus "_id". This means, for this to work, the relationship in model Comment, needs to be called user(), insted users()
+        foreach ($comments as $comment) {
+             $comment["user"] = $comment->user;
+        }
+
+        // Getting list of scores for this campaign.   
+        $scores = $campaign->users->pluck('pivot.score');
+        $filtered_scores = $scores->reject(function ($score) {
+            return $score=== '0';
+        });
+
+        // getting the average punctuation for this course. First we convert the array of strings in numbers, then we get the average using the avg() Laravel collections method
+        $average = $filtered_scores->map( function($score) {
+            return (int)$score; // First we convert each number string to integer. Then we get the average.
+        })->avg();
+
+
+        // ----------------------------------------------------
+        $rates = $campaign->users->pluck('pivot');
+        $uid = Auth::id();
+
+        // Checking if the user has already rated. This will be true if at least one of the rate records match the uid with the current authenticated user, and is different to zero (default value).
+        $has_rated = (bool) $rates->contains(function ($rate) use ($uid){ 
+            return $rate['user_id'] === $uid && $rate['score'] !== '0';
+        });
+        // ---------------------------------------------------
+
+        return Inertia::render('Campaign/Show', compact('campaign', 'users', 'current_user', 'comments', 'scores', 'average', 'has_rated'));
     }
 
     /**
@@ -104,7 +161,7 @@ class CampaignController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Campaign $campaign)
-    {  
+    {
 
         $data = $request->validate([
             'name' => 'required',
@@ -118,7 +175,10 @@ class CampaignController extends Controller
         if ($request['is_rating']) {
            
             $campaign->users()->syncWithoutDetaching([$request['user'] => ['score' => $request['score']]]);
-            return 'done';
+            // return redirect()->back()->with('success', 'Model updated successfully!');
+            return response()->json([
+                'message' => 'Rating updated successfully'
+            ]);
 
         } else {
             
@@ -136,7 +196,7 @@ class CampaignController extends Controller
             $items = $request->items;
             $payload = [];
             
-            foreach ($items as $key => $item) {
+            foreach ($items as $item) {
                 $payload[$item['item_id']] = ['count' => $item['count']];
             };
             $campaign->items()->sync($payload);

@@ -20,7 +20,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
@@ -41,11 +41,10 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        
-            // return $request;
 
-            $comment = Comment::create($request->all());
+        $new_comment = Comment::create($request->all());
 
+        return $new_comment;
             // $campaign = Campaign::find($request->campaign_id);
 
             // $comment = Comment::create([
@@ -55,7 +54,6 @@ class CommentController extends Controller
             // ]);
             // $campaign = Campaign::find($request->campaign_id);
             // $new_comment = $campaign->comments()->create($request->all());
-            return $comment;
             
 
     }

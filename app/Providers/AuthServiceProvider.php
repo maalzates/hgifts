@@ -25,6 +25,12 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('admin', function ($user){
+            $user_pivot = $user->roles()->pluck('role_id')->toArray();
+            if (in_array('1', $user_pivot)){
+                return true;
+            }
+            return false;
+        });
     }
 }

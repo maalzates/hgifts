@@ -47,7 +47,6 @@
                 <template #content> 
                     <div class="flex">                           
                         <button class=" mr-3 justify-end text-white-500 bg-violet-600 font-bold px-3 py-2 text-white outline-none focus:outline-none mr-1 mb-1 rounded ease-linear transition-all duration-150" @click="addItem">Agregar item </button>
-                        {{form.items}}
                     </div>
                     <label>
                         <!-- <table v-for="(item, i) in items" :key="i" > -->
@@ -83,14 +82,7 @@
                     <template><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} Selected Users</span></template>
                 </VueMultiselect>
             </div>
-             <!-- <div> -->
-                <!-- <vue-multi-select v-model="value" :options="options"></vue-multi-select> -->
-                <!-- <multi-select v-model="value" :options="options"></multi-select> -->
-                <!-- <VueMultiselect v-model="selected" :options="options"></VueMultiselect> -->
-            <div>Selected users {{selected_users}} </div>
-            <div>Form users id's {{form.users}} </div>
-                
-            <!-- </div> -->
+
         </div>
         <div class="flex justify-end">
             <button  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3" @click="store"> Create new</button>
@@ -141,27 +133,60 @@ export default {
     },
     methods:{
         addItem(){
-            this.form.items.push({id:'', count:{}})
+            this.form.items.push({id:"''", count:""})
         },
         removeItem(index){
             this.form.items.splice(index, 1)
         },
-         store(){
-
+        isDuplicated(){
+            // Checking if the items selected are repeated
+            let items_array = [...this.form.items].map( (item) => item.id);
+            let repeated_items = items_array.some( (item, index) => items_array.indexOf(item) != index);
+            console.log(repeated_items);
+            return repeated_items;
+        },
+        isNameOrAmountEmpty(){
+            // Check if some of  the selected items is empty
+            let items_array = [...this.form.items];
+            let validation = items_array.some((item) => Object.values(item).some( value => value === "" ));
+            console.log(validation);
+            return validation;
+        },
+        repeatedError(){
+            this.$swal.fire({
+                icon: 'error',
+                title: 'Add Items Error',
+                text: 'Avoid selecting a repeated item, if you need more of one item, please increase the AMOUNT field.'
+            })
+        },
+        emptyError(){
+            this.$swal.fire({
+                icon: 'error',
+                title: 'Add Items Error',
+                text: 'Please make sure ITEM and COUNT fields are filled for all items.'
+            })
+        },
+        store(){
             // Filtering array of users by id, and attaching to form.
             let uids = this.selected_users.map((user) => user.id);
             this.form.users = uids;
-  
-            axios.post(this.route('campaigns.store', this.campaign),this.form)
-            .then(res => {
-                console.log(res)
-            })
-            .catch(err => {
-                console.error(err); 
-            })
 
+            if (this.isDuplicated()) {
+                this.repeatedError();
+            } else if (this.isNameOrAmountEmpty()) {
+                this.emptyError();
+            } else {
+                axios.post(this.route('campaigns.store', this.campaign),this.form)
+                .then(res => {
+                    console.log(res.data);
+                    window.location.href = '/campaigns/' + res.data.id + '/edit';
+                })
+                .catch(err => {
+                    console.error(err); 
+                })
+            }
 
-        //    this.$inertia.post(this.route('campaigns.store'), this.form);
+            // this.$inertia.post(this.route('campaigns.store'), this.form);
         }
     }
 }

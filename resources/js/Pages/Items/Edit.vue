@@ -1,7 +1,7 @@
 <template>
     <app-layout>
         <template #header>
-            Editar Item
+            Edit Item
         </template>
 
         <!-- Edit form -->
@@ -28,8 +28,8 @@
                 </div>
             </div>
             <div class="flex justify-end">
-                <button  class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3 mr-3" @click="destroy"> Eliminar</button>
-                <button  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3" @click="update"> Actualizar</button>
+                <button  v-if="can('items.destroy')" class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3 mr-3" @click="destroy"> Delete </button>
+                <button  v-if="can('items.edit')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3" @click="update"> Update </button>
 
             </div>
         </div>
@@ -51,8 +51,8 @@ export default {
     },
     props: {
         item: {
-        type: Object,
-        required: true,
+            type: Object,
+            required: true,
         },
     },
     data(){

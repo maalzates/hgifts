@@ -62,5 +62,17 @@ class RoleSeeder extends Seeder
             'name' => 'campaigns.destroy',
             'description' => 'Delete Campaign'
         ])->syncRoles([$role1]);
+
+        //* USERS * */
+        // Watch users list
+        Permission::create([
+            'name' => 'users.index',
+            'description' => 'Watch Users list'
+            ])->syncRoles([$role1]);
+        // Edit Users
+        Permission::create([
+            'name' => 'users.edit',
+            'description' => 'Edit Campaign'
+        ])->syncRoles([$role1]);
     }
 }
