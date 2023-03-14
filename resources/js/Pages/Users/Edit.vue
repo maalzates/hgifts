@@ -1,5 +1,5 @@
 <template>
-    <app-layout>
+    <app-layout :is_admin="this.is_admin">
         <template #header>
             Assign roles to {{user.name}}
         </template>
@@ -31,7 +31,10 @@ export default {
         },
         roles: {
             type: Object,
-        }
+        },
+        is_admin: {
+            type: Boolean,
+        },
     },
     data() {
         return {

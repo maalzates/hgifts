@@ -61,7 +61,9 @@ class CampaignController extends Controller
     {
         $items = Item::all();
         $users = User::all();
-        return Inertia::render('Campaign/Create', compact('items', 'users'));
+        $is_admin = Gate::allows('admin');
+
+        return Inertia::render('Campaign/Create', compact('items', 'users', 'is_admin'));
     }  
 
     /**
@@ -73,7 +75,7 @@ class CampaignController extends Controller
     public function store(Request $request)
     {   
 
-        $campaign = Campaign::create($request->all());
+        $campaign = Campaign::create($request->json());
         $items = collect($request->items);
         $users = collect($request->users);
 
@@ -130,8 +132,9 @@ class CampaignController extends Controller
             return $rate['user_id'] === $uid && $rate['score'] !== '0';
         });
         // ---------------------------------------------------
+        $is_admin = Gate::allows('admin');
 
-        return Inertia::render('Campaign/Show', compact('campaign', 'users', 'current_user', 'comments', 'scores', 'average', 'has_rated'));
+        return Inertia::render('Campaign/Show', compact('campaign', 'users', 'current_user', 'comments', 'scores', 'average', 'has_rated', 'is_admin'));
     }
 
     /**
@@ -148,7 +151,9 @@ class CampaignController extends Controller
         $items_pivot = $campaign->items->pluck('pivot');
         $users_subscribed = $campaign->users;
 
-        return Inertia::render('Campaign/Edit', compact('campaign', 'items', 'items_pivot', 'users', 'users_subscribed'));
+        $is_admin = Gate::allows('admin');
+
+        return Inertia::render('Campaign/Edit', compact('campaign', 'items', 'items_pivot', 'users', 'users_subscribed', 'is_admin'));
 
 
     }
@@ -163,12 +168,7 @@ class CampaignController extends Controller
     public function update(Request $request, Campaign $campaign)
     {
 
-        $data = $request->validate([
-            'name' => 'required',
-            'status' => 'required',
-            'dispatch_date' => 'required',
-            'delivery_date' => 'required'
-        ]);
+        $data = $request->json()->all();
         $campaign = Campaign::find($request->id);
 
         // UPDATING RATING for this campaign
@@ -209,6 +209,7 @@ class CampaignController extends Controller
     
     
             return redirect()->route('campaigns.index');
+            // return redirect()->back()->with('success', 'Updated successfully');
         }
     }
 
@@ -220,6 +221,8 @@ class CampaignController extends Controller
      */
     public function destroy(Campaign $campaign)
     {
-        //
+        $campaign->delete();
+        // return redirect()->route('items.index');
+        return redirect()->route('campaigns.index');
     }
 }

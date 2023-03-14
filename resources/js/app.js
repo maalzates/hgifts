@@ -5,7 +5,6 @@ require("./bootstrap");
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/inertia-vue3";
 import { InertiaProgress } from "@inertiajs/progress";
-import LaravelPermissionToVueJS from 'laravel-permission-to-vuejs';
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 // import VueMultiselect from 'vue-multiselect'
@@ -23,7 +22,6 @@ createInertiaApp({
             .use(plugin)
             .mixin({ methods: { route }})
             // .mixin({ components: {VueMultiselect}})
-            .use(LaravelPermissionToVueJS)
             .use(VueSweetalert2)
             .mount(el);
     },

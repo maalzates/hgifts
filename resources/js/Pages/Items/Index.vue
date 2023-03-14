@@ -1,11 +1,11 @@
 <template>
-  <app-layout title="Items">
+  <app-layout title="Items" :is_admin="this.is_admin">
         <template #header>
           <div class="flex justify-between">
           <h2 class="flex font-semibold text-xl text-gray-800 leading-tight">
             Items List
           </h2>
-            <Link :href="route('items.create')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" v-if="can('items.create')"> Create New</Link>
+            <Link :href="route('items.create')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" v-if="this.is_admin"> Create New</Link>
           </div>
         </template>
         <!-- Item Listing -->
@@ -26,7 +26,7 @@
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Unit Price</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Units Owned</th>
-                                    <th v-if="can('items.edit')" scope="col" class="relative px-6 py-3">
+                                    <th v-if="this.is_admin" scope="col" class="relative px-6 py-3">
                                         <span class="sr-only" >Edit</span>
                                     </th>
                                 </tr>
@@ -42,7 +42,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{item.units_owned}}
                                     </td>
-                                    <td v-if="can('items.edit')" class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <td v-if="this.is_admin" class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <Link :href="route('items.edit', item)" class="text-indigo-600 hover:text-indigo-900">
                                             <i class="fas fa-regular fa-pen-to-square"></i>
                                         </Link>
@@ -76,11 +76,12 @@ export default {
         Pagination
     },
     props: {
-      items: {
-        type: Object,
-      },
-      methods: {
-      }
+        items: {
+            type: Object,
+        },
+        is_admin: {
+            type: Boolean,
+        },
     },
 
 }

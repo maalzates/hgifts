@@ -827,6 +827,8 @@ video {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}.invisible {
+  visibility: hidden;
 }.fixed {
   position: fixed;
 }.absolute {
@@ -914,6 +916,8 @@ video {
   margin-bottom: 0.25rem;
 }.mb-2 {
   margin-bottom: 0.5rem;
+}.mb-5 {
+  margin-bottom: 1.25rem;
 }.block {
   display: block;
 }.inline-block {
@@ -1237,6 +1241,8 @@ video {
   padding: 1.5rem;
 }.p-5 {
   padding: 1.25rem;
+}.p-10 {
+  padding: 2.5rem;
 }.px-4 {
   padding-left: 1rem;
   padding-right: 1rem;

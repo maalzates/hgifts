@@ -1,5 +1,5 @@
 <template>
-  <app-layout>
+  <app-layout :is_admin="this.is_admin">
     <template #header>
         <div class="flex justify-between">
             <h2 class="flex font-semibold text-xl text-gray-800 leading-tight">
@@ -7,13 +7,13 @@
             </h2>
             
             <div class="flex flex-col">
-                <Link  :href="route('campaigns.create')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" v-if="can('campaigns.create')"> Create New</Link>
+                <Link  :href="route('campaigns.create')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" v-if="this.is_admin"> Create New</Link>
             </div>
         </div>
-        <div v-if="!this.is_admin"><span class="font-bold	 mr-2">Filters</span>
-        <button @click="filterActiveOrSubscribedCampaigns()" class="btn mr-2"> All</button>
-        <button @click="filterActiveCampaigns()" class="btn mr-2" > Active </button>
-        <button @click="filterSubscribedCampaigns()" class="btn mr-2"> Suscribed</button>
+        <div v-if="!this.is_admin"><span class="font-bold mr-2 bg-blue-500 ">Filters</span>
+        <button @click="filterActiveOrSubscribedCampaigns()" class="btn mr-2 bg-blue-500"> All</button>
+        <button @click="filterActiveCampaigns()" class="btn mr-2 bg-blue-500" > Active </button>
+        <button @click="filterSubscribedCampaigns()" class="btn mr-2 bg-blue-500"> Suscribed</button>
         </div>
     </template>
             <!-- Campaign lists ALL-->
@@ -23,7 +23,7 @@
                 <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
                     <!-- ADMIN VIEW -->
-                    <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg" v-if="is('Admin')">
+                    <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg" v-if="this.is_admin">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
@@ -122,8 +122,8 @@
                                     </td>
                                     <!-- SUSCRIBE/UNSUSCRIBE BUTTON -->
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <button @click="handleSubscription(campaign, true)" v-if="isSubscribed(campaign)"> Unsuscribe</button>
-                                        <button @click="handleSubscription(campaign, false)" v-else >Subscribe</button>
+                                        <button @click="handleSubscription(campaign)" v-if="isSubscribed(campaign)"> Unsuscribe</button>
+                                        <button @click="handleSubscription(campaign)" v-else >Subscribe</button>
                                     </td>
 
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex justify-between">
@@ -327,7 +327,6 @@ export default {
             let result = uids.includes(this.current_user.id); // Check if current authenticated user is present in this array. 
             return result;
         },
-
         handleSubscription(campaign) {
             let is_suscribed = this.isSubscribed(campaign);
             let items = campaign.items.map( item => item.pivot); // We extract the items pivot table information, so that we can get the item_id instead "id", since we need this to our controller logical
@@ -342,14 +341,41 @@ export default {
                 // UNSUSCRIPTION LOGICAL
                 let users = uids.filter( (uid) => uid != this.current_user.id); // Creates a new array, removing the current user id, from the users in this campaign
                 this.form.users = users; // Attach the uids of the filtered users to the form data.
-                this.$inertia.put(this.route('campaigns.update', campaign), this.form);
+                
+                // this.$inertia.put(this.route('campaigns.update', campaign), this.form);
+
+                axios.post(`/campaigns/${campaign.id}`, {
+                    ...this.form,
+                    _method: 'PUT',    
+                })
+                .then((response) => {
+                    window.location.reload();
+                    console.log(response);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+
 
             } else { 
                 // SUSCRIPTION LOGICAL
                 uids.push(this.current_user.id); // Attach the curent user id, to the uids array
 
                 this.form.users = uids; // Attach the uids of the filtered users to the form data.
-                this.$inertia.put(this.route('campaigns.update', campaign), this.form);
+                // this.$inertia.put(this.route('campaigns.update', campaign), this.form);
+
+                axios.post(`/campaigns/${campaign.id}`, {
+                    ...this.form,
+                    _method: 'PUT',    
+                })
+                .then((response) => {
+                    window.location.reload();
+                    console.log(response);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+                
             }
         },
         isBoxViewable( delivery_date) {

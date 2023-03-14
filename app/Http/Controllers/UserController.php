@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Gate;
 use Spatie\Permission\Models\Role;
 
 
@@ -18,7 +19,8 @@ class UserController extends Controller
     public function index()
     {
         $users = User::paginate();
-        return Inertia::render('Users/Index', compact('users'));
+        $is_admin = Gate::allows('admin');
+        return Inertia::render('Users/Index', compact('users', 'is_admin'));
     }
 
     /**
@@ -63,7 +65,8 @@ class UserController extends Controller
     {
         $user_roles = $user->roles();
         $roles = $user_roles->pluck('id'); // get this user role id's array
-        return Inertia::render('Users/Edit', compact('user', 'roles'));
+        $is_admin = Gate::allows('admin');
+        return Inertia::render('Users/Edit', compact('user', 'roles', 'is_admin'));
     }
 
     /**

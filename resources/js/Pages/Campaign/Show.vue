@@ -1,14 +1,14 @@
 <template>
-  <app-layout>
+  <app-layout :is_admin="this.is_admin">
     <template #header>
-      <h2 class="flex font-semibold text-xl text-gray-800 leading-tight"> Campaign - {{campaign.name}}</h2> 
+        <div class="flex justify-between">
+            <h2 class="flex font-semibold text-xl text-gray-800 leading-tight"> Campaign - {{campaign.name}}</h2> 
+            <button @click="generatePDF">Print User Addresses</button>
+        </div>
       <!-- {{this.users}} -->
     </template>
+            <!-- SHOW VIEW -->
         <div class="overflow-hidden bg-white shadow sm:rounded-lg">
-        <!-- <div class="px-4 py-5 sm:px-6">
-            <h3 class="text-lg font-medium leading-6 text-gray-900">Applicant Information</h3>
-            <p class="mt-1 max-w-2xl text-sm text-gray-500">Personal details and application.</p>
-        </div> -->
             <div class="border-t border-gray-200">
                 <dl>
                 <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -50,7 +50,6 @@
                             placeholder=""
                             v-model="form.comment.content" ></textarea>
                         </div>
-                        {{this.form.comment}}
                     </template>
                     <template #footer>
                         <button class="px-3 py-2 text-sm text-blue-100 bg-blue-600 rounded" @click="sendComment">
@@ -100,7 +99,9 @@
                 <!-- END Card -->
                 </dl>
             </div>
+            
         </div>
+
   </app-layout>
 </template>
 
@@ -108,7 +109,9 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import CommentsModal from "../Components/CommentsModal.vue";
 import RatingModal from "../Components/RatingModal.vue";
-import StarRating from 'vue-star-rating'
+import StarRating from 'vue-star-rating';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 
 
@@ -118,7 +121,7 @@ export default {
         AppLayout,
         CommentsModal,
         StarRating,
-        RatingModal
+        RatingModal,
     },
     props: {
         campaign: {
@@ -138,7 +141,10 @@ export default {
         },
         has_rated: {
             type: Boolean
-        }
+        },
+        is_admin: {
+            type: Boolean,
+        },
     },
     data(){
         return {
@@ -151,6 +157,7 @@ export default {
                 },
                 score: '',
                 average: this.average,
+                user: this.current_user.id, // Needed for rating logic
                 is_rating: false, // We will use for the Controller to know if a raiting is being sent. 
             },
             component_comments: this.comments,
@@ -160,7 +167,9 @@ export default {
         rate(){
             this.form.is_rating = true; // This will tell the controller that we're updating the rating instead the campaign itself.
             this.form.score = this.form.score.toString();// We need to convert the score to string, since mysql enum values are 0-indexed. In order to save the actual 5, it needs to be a String.
+            
             // this.$inertia.put(this.route('campaigns.update', this.campaign), this.form);
+            
             axios.put(`/campaigns/${this.campaign.id}`, {
                 ...this.form,
                  _method: 'PUT',    
@@ -185,6 +194,30 @@ export default {
                 console.log(error);
                 // Handle the error here
             });
+        },
+        
+        generatePDF(){
+            const doc = new jsPDF()
+
+            doc.text(`User addresses for campaign: ${this.campaign.name}`, 10, 10)
+
+            const headers = ['Name', 'Address']
+            const data = []
+
+            this.users.forEach(user => {
+            const row = []
+            row.push(user.name)
+            row.push(user.address)
+            data.push(row)
+            })
+
+            doc.autoTable({
+            head: [headers],
+            body: data
+            })
+
+            doc.save('addresses.pdf')
+            
         }
     }
 

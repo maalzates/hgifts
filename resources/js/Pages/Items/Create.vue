@@ -1,7 +1,7 @@
 <template>
-  <app-layout>
+  <app-layout  :is_admin="this.is_admin">
     <template #header>
-      <h2 class="flex font-semibold text-xl text-gray-800 leading-tight"> Crear Nuevo Item</h2>
+      <h2 class="flex font-semibold text-xl text-gray-800 leading-tight"> Crear Nuevo Item {{this.is_admin}}</h2>
     </template>
     <!-- Create form -->
     <div class="bg-white px-6 py-8 rounded-lg shadow">
@@ -42,6 +42,11 @@ export default {
     AppLayout,
     Input
   },
+  props: {
+    is_admin: {
+        type: Boolean,
+    },
+  },
   data(){
     return{
       form: {
@@ -53,7 +58,16 @@ export default {
   },
   methods:{
     createItem(){
-      this.$inertia.post(route('items.store', this.form))
+      // this.$inertia.post(route('items.store', this.form));
+
+      axios.post(this.route('items.store'),this.form)
+      .then(res => {
+          console.log(res);
+          window.location.href = this.route('items.index');
+      })
+      .catch(err => {
+          console.error(err); 
+      })
     }
   }
 }

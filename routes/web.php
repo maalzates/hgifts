@@ -21,15 +21,26 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+// Route::get('/', function () {
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
 
+
+// Route::get('/', function () {
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
+
+Route::redirect('/', 'login');
 
 // ITEMS
 // List show
@@ -67,7 +78,7 @@ Route::get('/comments/create', [CommentController::class, 'create'])->name('comm
 //Store
 Route::post('comments', [CommentController::class, 'store'])->name('comments.store');
 // Delete
-Route::delete('comments', [CampaignController::class, 'destroy'])->name('comments.destroy');
+Route::delete('comments', [CampaignController::class, 'destroy'])->name('comments.destroy')->middleware('web');;
 
 // USERS
 Route::resource('users', UserController::class)->names('users');
@@ -82,3 +93,5 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
+
+

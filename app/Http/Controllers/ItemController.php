@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use Illuminate\Http\Request;
-use App\Http\Requests\UpdateItemRequest;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class ItemController extends Controller
@@ -17,8 +17,8 @@ class ItemController extends Controller
     public function index()
     {
         $items = Item::latest('id')->paginate();
-      
-        return Inertia::render('Items/Index', compact('items'));
+        $is_admin = Gate::allows('admin');
+        return Inertia::render('Items/Index', compact('items', 'is_admin'));
     }
 
     /**
@@ -28,8 +28,9 @@ class ItemController extends Controller
      */
     public function create()
     {
-        
-        return Inertia::render('Items/Create');
+        $is_admin = Gate::allows('admin');
+
+        return Inertia::render('Items/Create', compact('is_admin'));
     }
 
     /**
@@ -40,11 +41,13 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'name' => 'required',
-            'unit_price' => 'required',
-            'units_owned' => 'required'
-        ]);
+        // $data = $request->json([
+        //     'name' => 'required',
+        //     'unit_price' => 'required',
+        //     'units_owned' => 'required'
+        // ]);
+
+        $data = $request->json()->all();
         Item::create($data);
 
         return redirect()->route('items.index');
@@ -69,7 +72,8 @@ class ItemController extends Controller
      */
     public function edit(Item $item)
     {
-        return Inertia::render('Items/Edit', compact('item'));
+        $is_admin = Gate::allows('admin');
+        return Inertia::render('Items/Edit', compact('item', 'is_admin'));
     }
 
     /**
@@ -81,11 +85,13 @@ class ItemController extends Controller
      */
     public function update(Request $request, Item $item)
     {
-        $data = $request->validate([
-            'name' => 'required',
-            'unit_price' => 'required',
-            'units_owned' => 'required'
-        ]);
+        // $data = $request->validate([
+        //     'name' => 'required',
+        //     'unit_price' => 'required',
+        //     'units_owned' => 'required'
+        // ]);
+        
+        $data = $request->json()->all();
 
         $item->update($data);
 
@@ -101,6 +107,7 @@ class ItemController extends Controller
     public function destroy(Item $item)
     {
         $item->delete();
+        // return redirect()->route('items.index');
         return redirect()->route('items.index');
     }
 }

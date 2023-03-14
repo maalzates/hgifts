@@ -1,5 +1,5 @@
 <template>
-    <app-layout>
+    <app-layout :is_admin="this.is_admin">
     <template #header>
       <h2 class="flex font-semibold text-xl text-gray-800 leading-tight"> Create New Campaign</h2>
     </template>
@@ -114,7 +114,10 @@ export default {
         },
         users: {
             type: Object
-        }
+        },
+        is_admin: {
+            type: Boolean,
+        },
     },
     data(){
         return {

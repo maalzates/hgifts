@@ -1,5 +1,5 @@
 <template>
-    <app-layout>
+    <app-layout :is_admin="this.is_admin">
     <template #header>
       <h2 class="flex font-semibold text-xl text-gray-800 leading-tight"> Edit Campaign - {{form.name}}</h2>
       <!-- {{this.users}} -->
@@ -87,7 +87,8 @@
             </div>
         </div>
         <div class="flex justify-end">
-            <button  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3" @click="update"> Update </button>
+                <button  class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3 mr-3" @click="destroy"> Delete </button>
+                <button  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3" @click="update"> Update </button>
         </div>
     </div>
   </app-layout>
@@ -128,7 +129,10 @@ export default {
         // Only users which are subscribed to this campaign, this will help us to render in the edit view, the input with the already suscribed users selected. 
         users_subscribed: {
             type: Object,
-        }
+        },
+        is_admin: {
+            type: Boolean,
+        },
     },
     data(){
         return {
@@ -186,21 +190,34 @@ export default {
                 this.repeatedError();
             } else if (this.isNameOrAmountEmpty()) {
                 this.emptyError();
-            } else {
-                    
-                this.$inertia.put(this.route('campaigns.update', this.campaign), this.form);
+            } else {    
+            // this.$inertia.put(this.route('campaigns.update', this.campaign), this.form);                    
+            axios.post(`/campaigns/${this.campaign.id}`, {
+                    ...this.form,
+                    _method: 'PUT',    
+                })
+                .then((response) => {
+                    console.log(response);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
             }
-             
             
-
-            // axios.put(this.route('campaigns.update', this.campaign),this.form)
-            // .then(res => {
-            //     console.log(res)
-            // })
-            // .catch(err => {
-            //     console.error(err); 
-            // })
-            }
+        },
+        destroy(){
+            axios.post(`/campaigns/${this.campaign.id}`, {
+                    ...this.form,
+                    _method: 'DELETE',    
+                })
+            .then(response => {
+                window.location.href = this.route('campaigns.index');
+                console.log(response);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        }
     }
 }
 </script>
