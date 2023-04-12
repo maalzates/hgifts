@@ -79,15 +79,6 @@
                                             </template>
 
                                         </DialogModal>
-<!-- 
-                                        <td v-else>
-                                            Secret Content
-                                        </td> -->
-
-                                        <!-- USO de lista HTML para mostrar los items de cada campaña -->
-                                        <!-- <ol v-for="item in campaign.items" :key="item.id" >
-                                            <li><p>{{item.name}}</p></li>
-                                        </ol> -->
                                     </td>
 
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -251,11 +242,8 @@
                                         <button @click="handleSubscription(campaign, false)" v-else >Suscribe</button>
                                     </td>
 
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex justify-between">
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex justify-between" >
                                         <!-- EDIT BUTTON -->
-                                        <Link :href="route('campaigns.edit', campaign)" class="text-indigo-600 hover:text-indigo-900">
-                                            <i class="fas fa-regular fa-pen-to-square"></i>
-                                        </Link>
                                         <!-- SHOW BUTTON -->
                                         <Link :href="route('campaigns.show', campaign)" class="text-indigo-600 hover:text-indigo-900">
                                             <i class="fas fa-chevron-right"></i>
