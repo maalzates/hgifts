@@ -23,33 +23,35 @@ class CampaignController extends Controller
      */
     public function index()
     {
-        $current_user = Auth::user();
+        // $current_user = Auth::user();
 
-        //  This will display the list of campaigns for admin roles.
-        $all_campaigns = Campaign::with('items', 'users')->latest('id')->paginate();
+        // //  This will display the list of campaigns for admin roles.
+        // $all_campaigns = Campaign::with('items', 'users')->latest('id')->paginate();
 
-        // Anyone who's not admin, will see filtered results. 
-        $active_campaigns = Campaign::with('items', 'users')->whereDate('dispatch_date', '>', Carbon::today()->toDateString())->paginate();
+        // // Anyone who's not admin, will see filtered results. 
+        // $active_campaigns = Campaign::with('items', 'users')->whereDate('dispatch_date', '>', Carbon::today()->toDateString())->paginate();
 
-        $subscribed_campaigns = Campaign::with('items', 'users')->whereHas('users', function($users) {
-            $users->where(function($query) {
-                $query->whereName(Auth::user()->name);
-                });
-           })->paginate();
+        // $subscribed_campaigns = Campaign::with('items', 'users')->whereHas('users', function($users) {
+        //     $users->where(function($query) {
+        //         $query->whereName(Auth::user()->name);
+        //         });
+        //    })->paginate();
 
            
-        $active_or_suscribed =  Campaign::with('items', 'users')->whereHas('users', function($users) {
-            $users->where(function($query) {
-                $query->whereName(Auth::user()->name);
-                })
-                ->orWhere(function($query) {
-                    $query->whereDate('dispatch_date', '>', Carbon::today()->toDateString());
-                 });
-           })->paginate();
+        // $active_or_suscribed =  Campaign::with('items', 'users')->whereHas('users', function($users) {
+        //     $users->where(function($query) {
+        //         $query->whereName(Auth::user()->name);
+        //         })
+        //         ->orWhere(function($query) {
+        //             $query->whereDate('dispatch_date', '>', Carbon::today()->toDateString());
+        //          });
+        //    })->paginate();
            
-        $is_admin = Gate::allows('admin');
+        // $is_admin = Gate::allows('admin');
 
-        return Inertia::render('Campaign/Index', compact('all_campaigns', 'current_user', 'active_campaigns', 'subscribed_campaigns', 'active_or_suscribed', 'is_admin'));
+        // return Inertia::render('Campaign/Index', compact('all_campaigns', 'current_user', 'active_campaigns', 'subscribed_campaigns', 'active_or_suscribed', 'is_admin'));
+
+        return Inertia::render('Campaign/Index');
     }
 
     /**
