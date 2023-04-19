@@ -87,8 +87,8 @@
             </div>
         </div>
         <div class="flex justify-end">
-                <button  class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3 mr-3" @click="destroy"> Delete </button>
-                <button  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3" @click="update"> Update </button>
+                <button  class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3 mr-3" @click="destroy()"> Delete </button>
+                <button  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3" @click="update()"> Update </button>
         </div>
     </div>
   </app-layout>

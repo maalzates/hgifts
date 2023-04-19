@@ -25588,13 +25588,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         _: 1 /* STABLE */
       }, 8 /* PROPS */, ["modelValue", "options"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{this.form.users}} ")])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_21, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3 mr-3",
-        onClick: _cache[6] || (_cache[6] = function () {
-          return $options.destroy && $options.destroy.apply($options, arguments);
+        onClick: _cache[6] || (_cache[6] = function ($event) {
+          return $options.destroy();
         })
       }, " Delete "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3",
-        onClick: _cache[7] || (_cache[7] = function () {
-          return $options.update && $options.update.apply($options, arguments);
+        onClick: _cache[7] || (_cache[7] = function ($event) {
+          return $options.update();
         })
       }, " Update ")])])];
     }),
