@@ -2,6 +2,7 @@
 
 use App\Models\Campaign;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
@@ -21,6 +22,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/campaigns', function () {
-    $campaigns = Campaign::all();
+    $campaigns = Campaign::with('items', 'users')->get();
     return response()->json($campaigns);
+});
+
+Route::get('/current-user', function () {
+    $user = Auth::user();
+    return response()->json($user);
 });

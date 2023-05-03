@@ -21,9 +21,25 @@
             <h1>Campaigns</h1>
             <ul>
                 <li v-for="campaign in all_campaigns" :key="campaign.id">
-                    {{ campaign.name }}
+                    {{ campaign.name}}
                 </li>
             </ul>
+
+            <h1>Active Campaignss</h1>
+            <ul>
+                <li v-for="campaign in active_campaigns" :key="campaign.id">
+                    {{campaign.name}}
+                    {{ campaign.dispatch_date }}
+                </li>
+            </ul>
+            <h1>Subscribed Campaigns</h1>
+            <ul>
+                <li v-for="campaign in subscribed_campaigns" :key="campaign.id">
+                    {{campaign.name}}
+                    {{ campaign.dispatch_date }}
+                </li>
+            </ul>
+            {{current_user}}
 
         </div>
         
@@ -42,13 +58,15 @@ export default {
     data(){
     },
     computed: {
-        ...mapState("campaigns", ["all_campaigns"]),
+        ...mapState("campaigns", ["all_campaigns", "current_user"]),
+        ...mapGetters('campaigns', ['active_campaigns', 'subscribed_campaigns'])
     },
     created(){
-        this.fetchCampaigns()
+        this.fetchCampaigns(),
+        this.fetchUser()
     },
     methods:{
-        ...mapActions('campaigns', ['fetchCampaigns']),
+        ...mapActions('campaigns', ['fetchCampaigns', 'fetchUser']),
     },
 }
 </script>
