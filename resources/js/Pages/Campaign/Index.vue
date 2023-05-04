@@ -21,7 +21,7 @@
             <h1>Campaigns</h1>
             <ul>
                 <li v-for="campaign in all_campaigns" :key="campaign.id">
-                    {{ campaign}}
+                    {{ campaign.name}}
                 </li>
             </ul>
 

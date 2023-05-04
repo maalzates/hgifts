@@ -26305,7 +26305,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(_ctx.all_campaigns, function (campaign) {
         return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", {
           key: campaign.id
-        }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(campaign), 1 /* TEXT */);
+        }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(campaign.name), 1 /* TEXT */);
       }), 128 /* KEYED_FRAGMENT */))]), _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(_ctx.active_campaigns, function (campaign) {
         return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", {
           key: campaign.id
@@ -28812,15 +28812,18 @@ var getters = {
   // FILTER CAMPAIGNS IF THE USER IS SUBSCRIBED TO THE CAMPAIGN (IF EXIST IN USERS LIST LINKED TO THE CAMPAIGN)
 
   subscribed_campaigns: function subscribed_campaigns(state) {
-    // const user = state.user; // WE GET THE USER
-    // if (!user) {
-    //   return [];
-    // }
-    // return state.all_campaigns.filter(campaign => { // FILTER EACH CAMPAIGN TO SHOW ONLY IF MATCH A CONDDITION
-    //   return campaign.users.some(u => u.id === user.id); // THE CONDITION IS THAT THE CURRENT USER ID SHOULD BE PRESENT IN THE CAMPAIGN USERS LIST
-    // });
-    return state.all_campaigns;
+    var user = state.current_user; // WE GET THE USER
+    if (!user) {
+      return [];
+    }
+    return state.all_campaigns.filter(function (campaign) {
+      // FILTER EACH CAMPAIGN TO SHOW ONLY IF MATCH A CONDDITION
+      return campaign.users.some(function (u) {
+        return u.id === user.id;
+      }); // THE CONDITION IS THAT THE CURRENT USER ID SHOULD BE PRESENT IN THE CAMPAIGN USERS LIST
+    });
   },
+
   // FILTER CAMPAIGNS IF THE USER IS SUBSCRIBED OR ACTIVE 
   subscribedOrActive: function subscribedOrActive(state) {
     return state.all_campaigns;
