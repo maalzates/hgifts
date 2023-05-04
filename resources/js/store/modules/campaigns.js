@@ -47,13 +47,14 @@ const getters = {
   // FILTER CAMPAIGNS IF THE USER IS SUBSCRIBED TO THE CAMPAIGN (IF EXIST IN USERS LIST LINKED TO THE CAMPAIGN)
 
   subscribed_campaigns: state => {
-    const user = state.user; // WE GET THE USER
-    if (!user) {
-      return [];
-    }
-    return state.all_campaigns.filter(campaign => { // FILTER EACH CAMPAIGN TO SHOW ONLY IF MATCH A CONDDITION
-      return campaign.users.some(u => u.id === user.id); // THE CONDITION IS THAT THE CURRENT USER ID SHOULD BE PRESENT IN THE CAMPAIGN USERS LIST
-    });
+    // const user = state.user; // WE GET THE USER
+    // if (!user) {
+    //   return [];
+    // }
+    // return state.all_campaigns.filter(campaign => { // FILTER EACH CAMPAIGN TO SHOW ONLY IF MATCH A CONDDITION
+    //   return campaign.users.some(u => u.id === user.id); // THE CONDITION IS THAT THE CURRENT USER ID SHOULD BE PRESENT IN THE CAMPAIGN USERS LIST
+    // });
+    return state.all_campaigns;
   },
 
   // FILTER CAMPAIGNS IF THE USER IS SUBSCRIBED OR ACTIVE 

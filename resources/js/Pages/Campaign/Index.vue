@@ -21,7 +21,7 @@
             <h1>Campaigns</h1>
             <ul>
                 <li v-for="campaign in all_campaigns" :key="campaign.id">
-                    {{ campaign.name}}
+                    {{ campaign}}
                 </li>
             </ul>
 
@@ -36,7 +36,6 @@
             <ul>
                 <li v-for="campaign in subscribed_campaigns" :key="campaign.id">
                     {{campaign.name}}
-                    {{ campaign.dispatch_date }}
                 </li>
             </ul>
             {{current_user}}
