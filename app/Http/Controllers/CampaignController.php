@@ -50,7 +50,7 @@ class CampaignController extends Controller
         // $is_admin = Gate::allows('admin');
 
         // return Inertia::render('Campaign/Index', compact('all_campaigns', 'current_user', 'active_campaigns', 'subscribed_campaigns', 'active_or_suscribed', 'is_admin'));
-
+        // return $all_campaigns;
         return Inertia::render('Campaign/Index');
     }
 

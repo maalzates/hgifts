@@ -3,7 +3,7 @@
     <template #header>
         <div class="flex justify-between">
             <h2 class="flex font-semibold text-xl text-gray-800 leading-tight">
-            Campaigns List
+            Campaigns List v2
             </h2>
             
         </div>
@@ -18,8 +18,9 @@
         <!-- This example requires Tailwind CSS v2.0+ -->
 
         <div>
-            <h1>Campaigns</h1>
-            <ul>
+            <h1>Campaigns </h1>
+            {{all_campaigns}}
+            <!-- <ul>
                 <li v-for="campaign in all_campaigns" :key="campaign.id">
                     {{ campaign.name}}
                 </li>
@@ -38,21 +39,24 @@
                     {{campaign.name}}
                 </li>
             </ul>
-            {{current_user}}
-
+            {{current_user}} -->
+       <Pagination :pagination="all_campaigns" />
         </div>
-        
+
+ 
+
   </app-layout>
 </template>
 
 <script>
 import AppLayout from '../../Layouts/AppLayout.vue';
 import { mapActions, mapState, mapGetters } from 'vuex';
-
+import Pagination from "../Components/Pagination.vue";
 
 export default {
     components: {
         AppLayout,
+        Pagination, 
     },
     data(){
     },
@@ -62,7 +66,7 @@ export default {
     },
     created(){
         this.fetchCampaigns(),
-        this.fetchUser()
+        this.fetchUser()      
     },
     methods:{
         ...mapActions('campaigns', ['fetchCampaigns', 'fetchUser']),

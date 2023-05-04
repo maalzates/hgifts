@@ -31,7 +31,8 @@ const actions = {
 
   // GET CURRENT CAMPAIGNS INFORMATION
   async fetchCampaigns({ commit }) {
-    const campaigns = await axios.get("api/campaigns?with[]=items&with[]=users");
+    // const campaigns = await axios.get("api/campaigns?with[]=items&with[]=users");
+    const campaigns = await axios.get("api/campaigns?page=${page}");
     commit("SET_ALL_CAMPAIGNS", campaigns.data);
   },
 
