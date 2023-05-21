@@ -19,28 +19,10 @@
 
         <div>
             <h1>Campaigns </h1>
-            {{all_campaigns}}
-            <!-- <ul>
-                <li v-for="campaign in all_campaigns" :key="campaign.id">
-                    {{ campaign.name}}
-                </li>
-            </ul>
-
-            <h1>Active Campaignss</h1>
-            <ul>
-                <li v-for="campaign in active_campaigns" :key="campaign.id">
-                    {{campaign.name}}
-                    {{ campaign.dispatch_date }}
-                </li>
-            </ul>
-            <h1>Subscribed Campaigns</h1>
-            <ul>
-                <li v-for="campaign in subscribed_campaigns" :key="campaign.id">
-                    {{campaign.name}}
-                </li>
-            </ul>
-            {{current_user}} -->
-       <Pagination :pagination="all_campaigns" />
+            ACTIVE
+            <!-- {{all_campaigns}} -->
+            {{active_campaigns}}
+            <TailwindPagination :data="active_campaigns" @pagination-change-page="fetchCampaigns"/>
         </div>
 
  
@@ -50,19 +32,20 @@
 
 <script>
 import AppLayout from '../../Layouts/AppLayout.vue';
-import { mapActions, mapState, mapGetters } from 'vuex';
-import Pagination from "../Components/Pagination.vue";
+import { mapActions, mapState} from 'vuex';
+import { TailwindPagination } from 'laravel-vue-pagination';
 
 export default {
     components: {
         AppLayout,
-        Pagination, 
+        TailwindPagination
     },
     data(){
+        return {}
     },
     computed: {
-        ...mapState("campaigns", ["all_campaigns", "current_user"]),
-        ...mapGetters('campaigns', ['active_campaigns', 'subscribed_campaigns'])
+        ...mapState("campaigns", ["all_campaigns",'active_campaigns', 'subscribed_campaigns', 'subscribed_or_active_campaigns', 'is_admin', "current_user"]),
+        // ...mapGetters('campaigns', ['active_campaigns', 'subscribed_campaigns', 'subscribed_or_active_campaigns'])
     },
     created(){
         this.fetchCampaigns(),

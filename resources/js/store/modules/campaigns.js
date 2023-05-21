@@ -2,12 +2,28 @@ import moment from 'moment'
 
 const state = {
   all_campaigns: [],
+  active_campaigns: [],
+  subscribed_campaigns: [],
+  active_or_subscribed_campaigns: [],
+  is_admin: null,
   current_user: null
 };
 
 const mutations = {
   SET_ALL_CAMPAIGNS(state, campaigns) {
     state.all_campaigns = campaigns;
+  },
+  SET_ACTIVE_CAMPAIGNS(state, campaigns) {
+    state.active_campaigns = campaigns;
+  },
+  SET_SUBSCRIBED_CAMPAIGNS(state, campaigns) {
+    state.subscribed_campaigns = campaigns;
+  },
+  SET_ACTIVE_OR_SUBSCRIBED_CAMPAIGNS(state, campaigns) {
+    state.active_or_subscribed_campaigns = campaigns;
+  },
+  SET_IS_ADMIN(state, is_admin) {
+    state.is_admin = is_admin;
   },
 
   SET_USER (state, user) {
@@ -30,38 +46,20 @@ const actions = {
   },
 
   // GET CURRENT CAMPAIGNS INFORMATION
-  async fetchCampaigns({ commit }) {
+  async fetchCampaigns({ commit }, page = 1) {
     // const campaigns = await axios.get("api/campaigns?with[]=items&with[]=users");
-    const campaigns = await axios.get("api/campaigns?page=${page}");
-    commit("SET_ALL_CAMPAIGNS", campaigns.data);
+    const response = await axios.get(`api/campaigns?page=${page}`);
+
+    commit("SET_ALL_CAMPAIGNS", response.data.campaigns);
+    commit("SET_ACTIVE_CAMPAIGNS", response.data.active_campaigns);
+    commit("SET_SUBSCRIBED_CAMPAIGNS", response.data.subscribed_campaigns);
+    commit("SET_ACTIVE_OR_SUBSCRIBED_CAMPAIGNS", response.data.active_or_subscribed_campaigns);
+    commit("SET_IS_ADMIN", response.data.is_admin);
   },
 
 };
   
 const getters = {
-  // FILTER CAMPAIGNS IF DISPATCH DATE IS LATER THAN TODAY
-  active_campaigns: (state) => {
-    const today = moment().format('YYYY-MM-DD');
-    return state.all_campaigns.filter((campaign) => campaign.dispatch_date > today);
-  },
-
-  // FILTER CAMPAIGNS IF THE USER IS SUBSCRIBED TO THE CAMPAIGN (IF EXIST IN USERS LIST LINKED TO THE CAMPAIGN)
-
-  subscribed_campaigns: state => {
-    const user = state.current_user; // WE GET THE USER
-    if (!user) {
-      return [];
-    }
-    return state.all_campaigns.filter(campaign => { // FILTER EACH CAMPAIGN TO SHOW ONLY IF MATCH A CONDDITION
-      return campaign.users.some(u => u.id === user.id); // THE CONDITION IS THAT THE CURRENT USER ID SHOULD BE PRESENT IN THE CAMPAIGN USERS LIST
-    });
-  },
-
-  // FILTER CAMPAIGNS IF THE USER IS SUBSCRIBED OR ACTIVE 
-  subscribedOrActive: (state) => {
-    return state.all_campaigns;
-  }
-
 };
 
 export default {
