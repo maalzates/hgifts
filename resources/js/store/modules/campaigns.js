@@ -20,7 +20,7 @@ const mutations = {
     state.subscribed_campaigns = campaigns;
   },
   SET_ACTIVE_OR_SUBSCRIBED_CAMPAIGNS(state, campaigns) {
-    state.active_or_subscribed_campaigns = campaigns;
+    state.active_or_subscribed_campaigns =  campaigns;
   },
   SET_IS_ADMIN(state, is_admin) {
     state.is_admin = is_admin;
