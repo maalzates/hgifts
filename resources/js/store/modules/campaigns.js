@@ -2,11 +2,11 @@ import moment from 'moment'
 
 const state = {
   all_campaigns: [],
-  active_campaigns: [],
+  active_campaigns:[],
   subscribed_campaigns: [],
   active_or_subscribed_campaigns: [],
   is_admin: null,
-  current_user: null
+  current_user: null,
 };
 
 const mutations = {
@@ -28,6 +28,10 @@ const mutations = {
 
   SET_USER (state, user) {
     state.current_user = user
+  },
+
+  SET_VARIABLE () {
+    state.variable= 'Juan'
   }
 };
 
@@ -57,6 +61,34 @@ const actions = {
     commit("SET_IS_ADMIN", response.data.is_admin);
   },
 
+  // USER UNSUSCRIPTION FROM CAMPAIGN
+  async unsubscribeAction({commit}, campaign) {
+    const response = await axios.post(`api/campaigns/${campaign.id}`, {
+        ...campaign,
+        _method: 'PUT',    
+    })
+    .then((response) => {
+        console.log(response);
+    })
+    .catch(error => {
+        console.log(error);
+    });
+
+  },
+
+  // USER SUBSCRIPTION FROM CAMPAIGN
+  async subscribeAction({commit}, campaign) {
+    await axios.post(`/campaigns/${campaign.id}`, {
+        ...campaign,
+        _method: 'PUT',    
+    })
+    .then((response) => {
+        console.log(response);
+    })
+    .catch(error => {
+        console.log(error);
+    });
+  }
 };
   
 const getters = {
@@ -69,63 +101,3 @@ export default {
   actions,
   getters,
 };
-
-
-
-// const state = {
-//     campaigns: [],
-//   };
-  
-//   const mutations = {
-//     SET_CAMPAIGNS(state, campaigns) {
-//       state.campaigns = campaigns;
-//     },
-//     ADD_CAMPAIGN(state, campaign) {
-//       state.campaigns.push(campaign);
-//     },
-//     UPDATE_CAMPAIGN(state, updatedCampaign) {
-//       const index = state.campaigns.findIndex(
-//         (campaign) => campaign.id === updatedCampaign.id
-//       );
-//       state.campaigns.splice(index, 1, updatedCampaign);
-//     },
-//     DELETE_CAMPAIGN(state, campaignId) {
-//       state.campaigns = state.campaigns.filter(
-//         (campaign) => campaign.id !== campaignId
-//       );
-//     },
-//   };
-  
-//   const actions = {
-//     async fetchCampaigns({ commit }) {
-//       const campaigns = await axios.get("/api/campaigns");
-//       commit("SET_CAMPAIGNS", campaigns.data);
-//     },
-//     async addCampaign({ commit }, campaign) {
-//       const newCampaign = await axios.post("/api/campaigns", campaign);
-//       commit("ADD_CAMPAIGN", newCampaign.data);
-//     },
-//     async updateCampaign({ commit }, updatedCampaign) {
-//       const response = await axios.put(
-//         `/api/campaigns/${updatedCampaign.id}`,
-//         updatedCampaign
-//       );
-//       commit("UPDATE_CAMPAIGN", response.data);
-//     },
-//     async deleteCampaign({ commit }, campaignId) {
-//       await axios.delete(`/api/campaigns/${campaignId}`);
-//       commit("DELETE_CAMPAIGN", campaignId);
-//     },
-//   };
-  
-//   const getters = {
-//     campaigns: (state) => state.campaigns,
-//   };
-  
-//   export default {
-//     namespaced: true,
-//     state,
-//     mutations,
-//     actions,
-//     getters,
-//   };

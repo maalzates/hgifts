@@ -26,7 +26,7 @@ class CampaignController extends Controller
         // $current_user = Auth::user();
 
         // //  This will display the list of campaigns for admin roles.
-        // $all_campaigns = Campaign::with('items', 'users')->latest('id')->paginate();
+        $all_campaigns = Campaign::with('items', 'users')->latest('id')->paginate();
 
         // // Anyone who's not admin, will see filtered results. 
         // $active_campaigns = Campaign::with('items', 'users')->whereDate('dispatch_date', '>', Carbon::today()->toDateString())->paginate();
@@ -51,7 +51,6 @@ class CampaignController extends Controller
 
         // return Inertia::render('Campaign/Index', compact('all_campaigns', 'current_user', 'active_campaigns', 'subscribed_campaigns', 'active_or_suscribed', 'is_admin'));
         // return $all_campaigns;
-
         return Inertia::render('Campaign/Index');
     }
 

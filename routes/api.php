@@ -26,16 +26,21 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // Route::get('/campaigns', function () {
-//     $campaigns = Campaign::with('items', 'users')->get();
-//     return response()->json($campaigns);
-// });
+    //     $campaigns = Campaign::with('items', 'users')->get();
+    //     return response()->json($campaigns);
+    // });
+
+Route::get('/current-user', function () {
+    $user = Auth::user();
+    return response()->json($user);
+});
 
 Route::get('/campaigns', function () {
     //  This will display the list of campaigns for admin roles.
     $campaigns = Campaign::with('items', 'users')->latest('id')->paginate(8);
 
     // Anyone who's not admin, will see filtered results. 
-    $active_campaigns = Campaign::with('items', 'users')->whereDate('dispatch_date', '>', Carbon::today()->toDateString())->paginate(8);
+    $active_campaigns = Campaign::with('items', 'users')->whereDate('delivery_date', '>', Carbon::today()->toDateString())->paginate(8);
 
     $subscribed_campaigns = Campaign::with('items', 'users')->whereHas('users', function($users) {
         $users->where(function($query) {
@@ -49,7 +54,7 @@ Route::get('/campaigns', function () {
                 $query->whereName(Auth::user()->name);
                 })
                 ->orWhere(function($query) {
-                    $query->whereDate('dispatch_date', '>', Carbon::today()->toDateString());
+                    $query->whereDate('delivery_date', '>', Carbon::today()->toDateString());
                  });
            })->paginate(8);
         
@@ -61,10 +66,15 @@ Route::get('/campaigns', function () {
         'active_or_subscribed_campaigns' => $active_or_subscribed_campaigns,
         'is_admin' => $is_admin
     ]);
-    return response()->json($campaigns);
 });
 
-Route::get('/current-user', function () {
-    $user = Auth::user();
-    return response()->json($user);
+
+// Update edited information route
+Route::put('campaigns/{campaign}', function(Request $request, Campaign $campaign) {
+    // UPDATING USERS ATTACHED TO THIS CAMPAIGN
+    $campaign = Campaign::find($request->id);
+    $users = $request->users;
+    $campaign->users()->sync($users);
+    //-----------------
+
 });

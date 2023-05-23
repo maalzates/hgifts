@@ -31,9 +31,11 @@ const toggleModal = () => {
 
 <template>
 <div>
-    <button 
-    class="h-10 px-5 m-2 text-gray-100 transition-colors duration-150 bg-gray-600 rounded-lg focus:shadow-outline hover:bg-gray-700"
-    @click="toggleModal">Users</button>
+    <button
+        type="button"
+        class="h-10 px-5 m-2 text-purple-100 transition-colors duration-150 bg-purple-600 rounded-lg focus:shadow-outline hover:bg-purple-700" @click="toggleModal">
+        Box Content
+    </button>
     <Modal
         :show="show"
         :max-width="maxWidth"

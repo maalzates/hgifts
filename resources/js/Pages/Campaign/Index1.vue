@@ -374,7 +374,6 @@ export default {
             } else {
                 return true;
             }
-
         },
         filterActiveCampaigns(){
             localStorage.removeItem("subscribed_campaigns");
