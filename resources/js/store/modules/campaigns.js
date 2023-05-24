@@ -1,4 +1,3 @@
-import moment from 'moment'
 
 const state = {
   all_campaigns: [],

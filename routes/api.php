@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Campaign;
+use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -25,16 +26,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Route::get('/campaigns', function () {
-    //     $campaigns = Campaign::with('items', 'users')->get();
-    //     return response()->json($campaigns);
-    // });
-
+// --- GET CURRENT USER INFO
 Route::get('/current-user', function () {
     $user = Auth::user();
     return response()->json($user);
 });
 
+
+// CAMPAIGNS ----------------
+
+// GET CAMPAIGNS
 Route::get('/campaigns', function () {
     //  This will display the list of campaigns for admin roles.
     $campaigns = Campaign::with('items', 'users')->latest('id')->paginate(8);
@@ -67,9 +68,7 @@ Route::get('/campaigns', function () {
         'is_admin' => $is_admin
     ]);
 });
-
-
-// Update edited information route
+// EDIT CAMPAIGN
 Route::put('campaigns/{campaign}', function(Request $request, Campaign $campaign) {
     // UPDATING USERS ATTACHED TO THIS CAMPAIGN
     $campaign = Campaign::find($request->id);
@@ -77,4 +76,17 @@ Route::put('campaigns/{campaign}', function(Request $request, Campaign $campaign
     $campaign->users()->sync($users);
     //-----------------
 
+});
+
+
+// ITEMS
+// GET  ITEMS
+Route::get('/items', function() {
+    $items = Item::latest('id')->paginate(8);
+    $is_admin = Gate::allows('admin');
+
+    return response()->json([
+        'items' => $items,
+        'is_admin' => $is_admin
+    ]);
 });
