@@ -64,26 +64,36 @@ export default {
     },
     methods:{
         update(){
+            // this.$inertia.put(this.route('items.update', this.item), this.form);
+
+            // axios.post(route('items.update', this.item), {__method: 'PUT', ...this.form})
+            // .then(response => {
+            //     console.log(response);
+            // })
+            // .catch(error => {
+            //     // Handle errors
+            // });
+
             
             axios.post(`/items/${this.item.id}`, {
-                ...this.form,
-                _method: 'PUT',    
-            })
-            .then((response) => {
-                window.location.href = this.route('items.index');
-                console.log(response);
-            })
-            .catch(error => {
-                console.log(error);
-            });
+                    ...this.form,
+                    _method: 'PUT',    
+                })
+                .then((response) => {
+                    window.location.href = this.route('items.index');
+                    console.log(response);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
         },
         destroy(){
             
             // this.$inertia.delete(this.route('items.destroy', this.item), this.form);
             axios.post(`/items/${this.item.id}`, {
-                ...this.form,
-                _method: 'DELETE',    
-            })
+                    ...this.form,
+                    _method: 'DELETE',    
+                })
             .then(response => {
                 window.location.href = this.route('items.index');
                 console.log(response);

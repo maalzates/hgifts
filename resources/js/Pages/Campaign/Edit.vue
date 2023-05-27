@@ -153,7 +153,10 @@ export default {
         },
         isDuplicated(){
             // Checking if the items selected are repeated
+
+            //Creating copy of original array and getting it id's
             let items_array = [...this.form.items].map( (item) => item.item_id);
+            // Checks if the index of the current item is different from its first occurrence in the array, indicating that it is a repeated item.
             let repeated_items = items_array.some( (item, index) => items_array.indexOf(item) != index);
             return repeated_items;
         },

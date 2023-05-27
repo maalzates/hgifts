@@ -26,7 +26,7 @@
             </div>
         </div>
         <div class="flex justify-end">
-            <button  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3" @click="createItem"> Crear</button>
+            <button  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3" @click="createItem(this.form)"> Crear</button>
         </div>
     </div>
   </app-layout>
@@ -36,16 +36,12 @@
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import Input from "../../Jetstream/Input.vue";
+import { mapActions } from 'vuex';
 
 export default {
   components: {
     AppLayout,
     Input
-  },
-  props: {
-    is_admin: {
-        type: Boolean,
-    },
   },
   data(){
     return{
@@ -56,19 +52,45 @@ export default {
       }
     }
   },
-  methods:{
-    createItem(){
-      // this.$inertia.post(route('items.store', this.form));
+  methods: {
+    ...mapActions('items', ['storeItem']), 
+    createItem(item){
+      if (this.isAnyFieldEmpty(item)) {
+        this.emptyError();
+      } else {
+        this.storeItem(item).then( () => {
+          console.log('created');
+          this.itemCreated();
+        });
+      }
+    },
+    isAnyFieldEmpty(item_form){
+      for (let key in item_form) {
+        if (item_form[key] === '') {
+          return true; // Found an empty property
+        }
+      }
+      return false; // No empty properties found
+    },
 
-      axios.post(this.route('items.store'),this.form)
-      .then(res => {
-          console.log(res);
-          window.location.href = this.route('items.index');
+    emptyError(){
+      this.$swal.fire({
+          icon: 'error',
+          title: 'Empty Field Error',
+          text: 'One or more inputs  are empty, fill them all'
       })
-      .catch(err => {
-          console.error(err); 
-      })
+    },
+
+    itemCreated(){
+      this.$swal.fire({
+      icon: 'success',
+      title: 'Item Created',
+      text: 'The item has been successfully created.',
+      });
     }
+  },
+  computed: {
+    
   }
 }
 </script>

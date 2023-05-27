@@ -90,3 +90,11 @@ Route::get('/items', function() {
         'is_admin' => $is_admin
     ]);
 });
+
+// STORE ITEM
+Route::post('/items', function(Request $request) {
+    $data = $request->json()->all();
+    Item::create($data);
+
+    return redirect()->route('items.index');
+});

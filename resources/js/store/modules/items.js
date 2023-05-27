@@ -20,6 +20,18 @@ const actions = {
         console.log(response);
         commit("SET_ITEMS", response.data.items);
         commit("SET_IS_ADMIN", response.data.is_admin);
+    },
+
+    async storeItem({commit}, item) {
+        const response = axios.post('/api/items',item)
+            .then(res => {
+                console.log(response);
+                return res
+            })
+            .catch(err => {
+                return err
+            })
+        
     }
 };
 
