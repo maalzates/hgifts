@@ -1,5 +1,3 @@
-
-
 const state = {
     items: {},
     is_admin: null,
@@ -31,7 +29,33 @@ const actions = {
             .catch(err => {
                 return err
             })
-        
+    },
+    async updateItem({commit}, item) {
+        const response = await axios.post(`/api/items/${item.id}`, {
+                ...item,
+                _method: 'PUT',    
+            })
+            .then((response) => {
+                // window.location.href = this.route('items.index');
+                console.log(response);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    },
+    async deleteItem({commit}, item ){
+        // console.log(item);
+        const response = await axios.post(`/api/items/${item.id}`, {
+                item,
+                _method: 'DELETE',    
+            })
+        .then(response => {
+            // window.location.href = this.route('items.index');
+            console.log(response);
+        })
+        .catch(error => {
+            console.log(error);
+        });
     }
 };
 

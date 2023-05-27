@@ -147,15 +147,16 @@ class CampaignController extends Controller
      */
     public function edit(Campaign $campaign)
     {
-        $items =  Item::all();
-        $users = User::all();
+        // $items =  Item::all();
+        // $users = User::all();
 
-        $items_pivot = $campaign->items->pluck('pivot');
-        $users_subscribed = $campaign->users;
+        // $items_pivot = $campaign->items->pluck('pivot');
+        // $users_subscribed = $campaign->users;
 
-        $is_admin = Gate::allows('admin');
+        // $is_admin = Gate::allows('admin');
 
-        return Inertia::render('Campaign/Edit', compact('campaign', 'items', 'items_pivot', 'users', 'users_subscribed', 'is_admin'));
+        // return Inertia::render('Campaign/Edit', compact('campaign', 'items', 'items_pivot', 'users', 'users_subscribed', 'is_admin'));
+        return Inertia::render('Campaign/Edit');
 
 
     }

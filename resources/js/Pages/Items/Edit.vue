@@ -27,9 +27,9 @@
                     </label>
                 </div>
             </div>
-            <div class="flex justify-end"  v-if="this.is_admin">
-                <button  class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3 mr-3" @click="destroy"> Delete </button>
-                <button  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3" @click="update"> Update </button>
+            <div class="flex justify-end"  v-if="!this.is_admin">
+                <button  class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3 mr-3" @click="destroy(this.form)"> Delete </button>
+                <button  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3" @click="update(this.form)"> Update </button>
             </div>
         </div>
 
@@ -40,59 +40,44 @@
 
 import AppLayout from "@/Layouts/AppLayout.vue";
 import Input from "../../Jetstream/Input.vue";
-import JetValidationErrors from "../../Jetstream/ValidationErrors.vue";
+import { mapActions } from 'vuex';
+import {isAnyFieldEmpty, emptyError, itemUpdated, itemDeleted} from '../Helpers/Items.js'
 
 export default {
     components: {
         AppLayout,
-        Input,
-        JetValidationErrors
+        Input
     },
     props: {
         item: {
             type: Object,
             required: true,
-        },
-        is_admin: {
-            type: Boolean,
-        },
+        }
     },
     data(){
         return {
-            form: this.item,
+            form: this.item
         }
     },
     methods:{
-        update(){
-            
-            axios.post(`/items/${this.item.id}`, {
-                ...this.form,
-                _method: 'PUT',    
-            })
-            .then((response) => {
-                window.location.href = this.route('items.index');
-                console.log(response);
-            })
-            .catch(error => {
-                console.log(error);
-            });
+        ...mapActions('items',['updateItem', 'deleteItem']),
+        update(item){
+            if(isAnyFieldEmpty(item))
+            {
+                emptyError(this.$swal);
+            }else {
+                this.updateItem(item).then( () => {
+                    itemUpdated(this.$swal);
+                });
+            }
         },
-        destroy(){
-            
-            // this.$inertia.delete(this.route('items.destroy', this.item), this.form);
-            axios.post(`/items/${this.item.id}`, {
-                ...this.form,
-                _method: 'DELETE',    
-            })
-            .then(response => {
-                window.location.href = this.route('items.index');
-                console.log(response);
-            })
-            .catch(error => {
-                console.log(error);
+        destroy(item){  
+            // console.log(item);
+            this.deleteItem(item).then( () => {
+                itemDeleted(this.$swal)
             });
         }
-    }
+    },
 }
 
 </script>

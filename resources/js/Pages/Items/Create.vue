@@ -37,6 +37,7 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import Input from "../../Jetstream/Input.vue";
 import { mapActions } from 'vuex';
+import {isAnyFieldEmpty, emptyError, itemCreated} from '../Helpers/Items.js'
 
 export default {
   components: {
@@ -55,38 +56,14 @@ export default {
   methods: {
     ...mapActions('items', ['storeItem']), 
     createItem(item){
-      if (this.isAnyFieldEmpty(item)) {
-        this.emptyError();
+      if (isAnyFieldEmpty(item, this.$swal)) {
+        emptyError(this.$swal);
       } else {
         this.storeItem(item).then( () => {
           console.log('created');
-          this.itemCreated();
+          itemCreated(this.$swal);
         });
       }
-    },
-    isAnyFieldEmpty(item_form){
-      for (let key in item_form) {
-        if (item_form[key] === '') {
-          return true; // Found an empty property
-        }
-      }
-      return false; // No empty properties found
-    },
-
-    emptyError(){
-      this.$swal.fire({
-          icon: 'error',
-          title: 'Empty Field Error',
-          text: 'One or more inputs  are empty, fill them all'
-      })
-    },
-
-    itemCreated(){
-      this.$swal.fire({
-      icon: 'success',
-      title: 'Item Created',
-      text: 'The item has been successfully created.',
-      });
     }
   },
   computed: {

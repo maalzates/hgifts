@@ -98,3 +98,17 @@ Route::post('/items', function(Request $request) {
 
     return redirect()->route('items.index');
 });
+
+
+// UPDATE ITEM: 
+Route::put('items/{item}', function(Request $request, Item $item){
+    $data = $request->json()->all();
+
+    $item->update($data);
+});
+
+Route::delete('items/{item}', function( Item $item){
+    $item->delete();
+    // return redirect()->route('items.index');
+    // return redirect()->route('items.index');
+});

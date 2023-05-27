@@ -73,8 +73,8 @@ class ItemController extends Controller
      */
     public function edit(Item $item)
     {
-        $is_admin = Gate::allows('admin');
-        return Inertia::render('Items/Edit', compact('item', 'is_admin'));
+        // $is_admin = Gate::allows('admin');
+        return Inertia::render('Items/Edit', compact('item'));
     }
 
     /**
