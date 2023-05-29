@@ -147,12 +147,15 @@ export default {
     },
     methods:{
         ...mapActions('campaigns', ['updateCampaign', 'deleteCampaign']),
+        
         addItem(){
             this.form.items.push({item_id:'', count:''})
         },
+
         removeItem(index){
             this.form.items.splice(index, 1)
         },
+
         update(){
             let uids = this.selected_users.map((user) => user.id); // Get all user ids of the curren editing campaign
             this.form.users = uids; // Attaching user id's to the form that will be send in the request. 
@@ -171,9 +174,10 @@ export default {
                 };
                 this.updateCampaign(data).then( () => { 
                     campaignUpdatedPopup(this.$swal);
-                 })
+                })
             }
         },
+
         destroy(){
             this.deleteCampaign(this.campaign).then( () => { 
                 campaignDeltedPopup(this.$swal);

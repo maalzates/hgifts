@@ -18,9 +18,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::paginate();
-        $is_admin = Gate::allows('admin');
-        return Inertia::render('Users/Index', compact('users', 'is_admin'));
+        // $users = User::paginate();
+        // $is_admin = Gate::allows('admin');
+        // return Inertia::render('Users/Index', compact('users', 'is_admin'));
+        return Inertia::render('Users/Index');
     }
 
     /**

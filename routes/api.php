@@ -2,6 +2,7 @@
 
 use App\Models\Campaign;
 use App\Models\Item;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -76,7 +77,6 @@ Route::put('campaigns/{campaign}', function(Request $request, Campaign $campaign
     //-----------------
 
 });
-
 // STORE  CAMPAIGN
 Route::post('/campaigns', function (Request $request){
 
@@ -97,7 +97,7 @@ Route::post('/campaigns', function (Request $request){
 
     // return $request->json();
 });
-
+// UPDATE
 Route::put('/campaigns/{campaign}', function(Request $request, Campaign $campaign) { 
 
     $data = $request->input();
@@ -129,13 +129,14 @@ Route::put('/campaigns/{campaign}', function(Request $request, Campaign $campaig
 
     return $campaign;
 });
-
+// DELETE CAMPAIGN
 Route::delete('/campaigns/{campaign}', function(Campaign $campaign) {
-    
+
     $campaign->delete();
 });
 
 // ITEMS ----------------------------------------------------------
+
 // GET  ITEMS
 Route::get('/items', function() {
     $items = Item::latest('id')->paginate(8);
@@ -146,7 +147,6 @@ Route::get('/items', function() {
         'is_admin' => $is_admin
     ]);
 });
-
 // STORE ITEM
 Route::post('/items', function(Request $request) {
     $data = $request->json()->all();
@@ -154,16 +154,24 @@ Route::post('/items', function(Request $request) {
 
     return redirect()->route('items.index');
 });
-
 // UPDATE ITEM: 
 Route::put('items/{item}', function(Request $request, Item $item){
     $data = $request->json()->all();
 
     $item->update($data);
 });
-
+// DELETE ITEM
 Route::delete('items/{item}', function( Item $item){
     $item->delete();
     // return redirect()->route('items.index');
     // return redirect()->route('items.index');
+});
+
+// USERS -----------------
+
+Route::get('/users', function(){
+    $users = User::paginate(8);
+    return response()->json([
+        'users' => $users
+    ]);
 });

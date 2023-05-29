@@ -13,7 +13,7 @@ export const isAnyFieldEmpty = (form) => {
     return false;
 };
 
-export  const areItemsDuplicated = (form_items) => {
+export  const areDuplicatedItems = (form_items) => {
     // Checking if the items selected are repeated
 
     //Creating copy of original array and getting it id's
