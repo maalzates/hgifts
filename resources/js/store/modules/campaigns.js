@@ -27,11 +27,8 @@ const mutations = {
 
   SET_USER (state, user) {
     state.current_user = user
-  },
-
-  SET_VARIABLE () {
-    state.variable= 'Juan'
   }
+
 };
 
 const actions = {
@@ -89,7 +86,7 @@ const actions = {
     });
   },
 
-  // STORE CAMPAIGNS
+  // STORE CAMPAIGN
   async storeCampaign( {commit}, campaign) {
     await  axios.post('/api/campaigns', campaign, {
       headers: {'Content-Type': 'application/json'}
@@ -103,7 +100,40 @@ const actions = {
       })
 
     // console.log(campaign);
+  },
+
+  // UPDATE  CAMPAIGN
+  async updateCampaign({commit}, {current_campaign, updated_campaign}) {
+
+    await axios.post(`/api/campaigns/${current_campaign.id}`, {
+      ...updated_campaign,
+      _method: 'PUT',
+    }, {
+      headers: { 'Content-Type': 'application/json' }
+    })
+    .then((response) => {
+        console.log(response);
+    })
+    .catch(error => {
+        console.log(error);
+    });
+  },
+
+  // DELETE CAMPAIGN
+  async deleteCampaign({commit}, campaign){
+    axios.post(`/api/campaigns/${campaign.id}`, {
+        ...campaign,
+        _method: 'DELETE',    
+    })
+    .then(response => {
+      // window.location.href = this.route('campaigns.index');
+      console.log(response);
+    })
+    .catch(error => {
+      console.log(error);
+    });
   }
+
 };
   
 const getters = {

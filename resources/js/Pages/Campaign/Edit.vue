@@ -98,8 +98,9 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import Input from "../../Jetstream/Input.vue";
 import AddItemModal from '@/Jetstream/AddItemModal.vue';
-import axios from 'axios';
 import VueMultiselect from 'vue-multiselect';
+import { mapActions } from 'vuex';
+import {emptyError, repeatedError, fieldsEmptyError, isAnyFieldEmpty, areDuplicatedItems, isNameOrAmountEmpty } from '../Helpers/campaigns.js'
 
 
 export default {
@@ -145,81 +146,35 @@ export default {
         }
     },
     methods:{
+        ...mapActions('campaigns', ['updateCampaign', 'deleteCampaign']),
         addItem(){
             this.form.items.push({item_id:'', count:''})
         },
         removeItem(index){
             this.form.items.splice(index, 1)
         },
-        isDuplicated(){
-            // Checking if the items selected are repeated
-
-            //Creating copy of original array and getting it id's
-            let items_array = [...this.form.items].map( (item) => item.item_id);
-            // Checks if the index of the current item is different from its first occurrence in the array, indicating that it is a repeated item.
-            let repeated_items = items_array.some( (item, index) => items_array.indexOf(item) != index);
-            return repeated_items;
-        },
-        isNameOrAmountEmpty(){
-            // Check if some of  the selected items is empty
-            let items_array = [...this.form.items];
-            let validation = items_array.some((item) => Object.values(item).some( value => value === "" ));
-            console.log(items_array);
-            return validation;
-        },
-        repeatedError(){
-            this.$swal.fire({
-                icon: 'error',
-                title: 'Add Items Error',
-                text: 'Avoid selecting a repeated item, if you need more of one item, please increase the AMOUNT field.'
-            })
-        },
-        emptyError(){
-            this.$swal.fire({
-                icon: 'error',
-                title: 'Add Items Error',
-                text: 'Please make sure ITEM and COUNT fields are filled for all items.'
-            })
-        },
         update(){
-        //    let items = this.form.items;
-        //    console.log(items)
             let uids = this.selected_users.map((user) => user.id); // Get all user ids of the curren editing campaign
             this.form.users = uids; // Attaching user id's to the form that will be send in the request. 
 
-            // console.log(this.form.items);  
-
-            if (this.isDuplicated()) {
-                this.repeatedError();
-            } else if (this.isNameOrAmountEmpty()) {
-                this.emptyError();
-            } else {    
-            // this.$inertia.put(this.route('campaigns.update', this.campaign), this.form);                    
-            axios.post(`/campaigns/${this.campaign.id}`, {
-                    ...this.form,
-                    _method: 'PUT',    
-                })
-                .then((response) => {
-                    console.log(response);
-                })
-                .catch(error => {
-                    console.log(error);
-                });
+            if(isAnyFieldEmpty(this.form)){
+                fieldsEmptyError(this.$swal);
+            }
+            else if (areDuplicatedItems(this.form.items)) {
+                repeatedError(this.$swal);
+            } else if (isNameOrAmountEmpty(this.form.items)) {
+                emptyError(this.$swal);
+            } else {
+                const data = {
+                    current_campaign: this.campaign,
+                    updated_campaign: this.form
+                };
+                this.updateCampaign(data)
             }
             
         },
         destroy(){
-            axios.post(`/campaigns/${this.campaign.id}`, {
-                    ...this.form,
-                    _method: 'DELETE',    
-                })
-            .then(response => {
-                window.location.href = this.route('campaigns.index');
-                console.log(response);
-            })
-            .catch(error => {
-                console.log(error);
-            });
+            this.deleteCampaign(this.campaign);
         }
     }
 }

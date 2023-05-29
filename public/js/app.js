@@ -21342,18 +21342,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Layouts_AppLayout_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Layouts/AppLayout.vue */ "./resources/js/Layouts/AppLayout.vue");
 /* harmony import */ var _Jetstream_Input_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Jetstream/Input.vue */ "./resources/js/Jetstream/Input.vue");
 /* harmony import */ var _Jetstream_AddItemModal_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Jetstream/AddItemModal.vue */ "./resources/js/Jetstream/AddItemModal.vue");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue-multiselect */ "./node_modules/vue-multiselect/dist/vue-multiselect.esm.js");
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+/* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue-multiselect */ "./node_modules/vue-multiselect/dist/vue-multiselect.esm.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
+/* harmony import */ var _Helpers_campaigns_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Helpers/campaigns.js */ "./resources/js/Pages/Helpers/campaigns.js");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 
@@ -21364,7 +21359,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     AppLayout: _Layouts_AppLayout_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
     Input: _Jetstream_Input_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
     AddItemModal: _Jetstream_AddItemModal_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
-    VueMultiselect: vue_multiselect__WEBPACK_IMPORTED_MODULE_4__["default"]
+    VueMultiselect: vue_multiselect__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   props: {
     items: {
@@ -21400,7 +21395,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       selected_users: this.users_subscribed
     };
   },
-  methods: {
+  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_5__.mapActions)('campaigns', ['updateCampaign', 'deleteCampaign'])), {}, {
     addItem: function addItem() {
       this.form.items.push({
         item_id: '',
@@ -21410,81 +21405,30 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     removeItem: function removeItem(index) {
       this.form.items.splice(index, 1);
     },
-    isDuplicated: function isDuplicated() {
-      // Checking if the items selected are repeated
-
-      //Creating copy of original array and getting it id's
-      var items_array = _toConsumableArray(this.form.items).map(function (item) {
-        return item.item_id;
-      });
-      // Checks if the index of the current item is different from its first occurrence in the array, indicating that it is a repeated item.
-      var repeated_items = items_array.some(function (item, index) {
-        return items_array.indexOf(item) != index;
-      });
-      return repeated_items;
-    },
-    isNameOrAmountEmpty: function isNameOrAmountEmpty() {
-      // Check if some of  the selected items is empty
-      var items_array = _toConsumableArray(this.form.items);
-      var validation = items_array.some(function (item) {
-        return Object.values(item).some(function (value) {
-          return value === "";
-        });
-      });
-      console.log(items_array);
-      return validation;
-    },
-    repeatedError: function repeatedError() {
-      this.$swal.fire({
-        icon: 'error',
-        title: 'Add Items Error',
-        text: 'Avoid selecting a repeated item, if you need more of one item, please increase the AMOUNT field.'
-      });
-    },
-    emptyError: function emptyError() {
-      this.$swal.fire({
-        icon: 'error',
-        title: 'Add Items Error',
-        text: 'Please make sure ITEM and COUNT fields are filled for all items.'
-      });
-    },
     update: function update() {
-      //    let items = this.form.items;
-      //    console.log(items)
       var uids = this.selected_users.map(function (user) {
         return user.id;
       }); // Get all user ids of the curren editing campaign
       this.form.users = uids; // Attaching user id's to the form that will be send in the request. 
 
-      // console.log(this.form.items);  
-
-      if (this.isDuplicated()) {
-        this.repeatedError();
-      } else if (this.isNameOrAmountEmpty()) {
-        this.emptyError();
+      if ((0,_Helpers_campaigns_js__WEBPACK_IMPORTED_MODULE_4__.isAnyFieldEmpty)(this.form)) {
+        (0,_Helpers_campaigns_js__WEBPACK_IMPORTED_MODULE_4__.fieldsEmptyError)(this.$swal);
+      } else if ((0,_Helpers_campaigns_js__WEBPACK_IMPORTED_MODULE_4__.areDuplicatedItems)(this.form.items)) {
+        (0,_Helpers_campaigns_js__WEBPACK_IMPORTED_MODULE_4__.repeatedError)(this.$swal);
+      } else if ((0,_Helpers_campaigns_js__WEBPACK_IMPORTED_MODULE_4__.isNameOrAmountEmpty)(this.form.items)) {
+        (0,_Helpers_campaigns_js__WEBPACK_IMPORTED_MODULE_4__.emptyError)(this.$swal);
       } else {
-        // this.$inertia.put(this.route('campaigns.update', this.campaign), this.form);                    
-        axios__WEBPACK_IMPORTED_MODULE_3___default().post("/campaigns/".concat(this.campaign.id), _objectSpread(_objectSpread({}, this.form), {}, {
-          _method: 'PUT'
-        })).then(function (response) {
-          console.log(response);
-        })["catch"](function (error) {
-          console.log(error);
-        });
+        var data = {
+          current_campaign: this.campaign,
+          updated_campaign: this.form
+        };
+        this.updateCampaign(data);
       }
     },
     destroy: function destroy() {
-      var _this = this;
-      axios__WEBPACK_IMPORTED_MODULE_3___default().post("/campaigns/".concat(this.campaign.id), _objectSpread(_objectSpread({}, this.form), {}, {
-        _method: 'DELETE'
-      })).then(function (response) {
-        window.location.href = _this.route('campaigns.index');
-        console.log(response);
-      })["catch"](function (error) {
-        console.log(error);
-      });
+      this.deleteCampaign(this.campaign);
     }
-  }
+  })
 });
 
 /***/ }),
@@ -30079,6 +30023,90 @@ var itemDeleted = function itemDeleted(Swal) {
 
 /***/ }),
 
+/***/ "./resources/js/Pages/Helpers/campaigns.js":
+/*!*************************************************!*\
+  !*** ./resources/js/Pages/Helpers/campaigns.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "areItemsDuplicated": () => (/* binding */ areItemsDuplicated),
+/* harmony export */   "emptyError": () => (/* binding */ emptyError),
+/* harmony export */   "fieldsEmptyError": () => (/* binding */ fieldsEmptyError),
+/* harmony export */   "isAnyFieldEmpty": () => (/* binding */ isAnyFieldEmpty),
+/* harmony export */   "isNameOrAmountEmpty": () => (/* binding */ isNameOrAmountEmpty),
+/* harmony export */   "repeatedError": () => (/* binding */ repeatedError)
+/* harmony export */ });
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+var isAnyFieldEmpty = function isAnyFieldEmpty(form) {
+  // Iterate over the object properties
+  for (var key in form) {
+    if (form.hasOwnProperty(key)) {
+      var value = form[key];
+      // Check if the value is an empty string or empty array
+      if (value === '' || Array.isArray(value) && value.length === 0) {
+        return true;
+      }
+    }
+  }
+  // No empty values found
+  return false;
+};
+var areItemsDuplicated = function areItemsDuplicated(form_items) {
+  // Checking if the items selected are repeated
+
+  //Creating copy of original array and getting it id's
+  var items_array = _toConsumableArray(form_items).map(function (item) {
+    return item.item_id;
+  });
+  // Checks if the index of the current item is different from its first occurrence in the array, indicating that it is a repeated item.
+  var are_repeated_items = items_array.some(function (item, index) {
+    return items_array.indexOf(item) != index;
+  });
+  return are_repeated_items;
+};
+var isNameOrAmountEmpty = function isNameOrAmountEmpty(form_items) {
+  // Check if some of  the selected items is empty
+  var items_array = _toConsumableArray(form_items);
+  var validation = items_array.some(function (item) {
+    return Object.values(item).some(function (value) {
+      return value === "";
+    });
+  });
+  console.log(items_array);
+  return validation;
+};
+var repeatedError = function repeatedError(Swal) {
+  Swal.fire({
+    icon: 'error',
+    title: 'Add Items Error',
+    text: 'Avoid selecting a repeated item, if you need more of one item, please increase the AMOUNT field.'
+  });
+};
+var emptyError = function emptyError(Swal) {
+  Swal.fire({
+    icon: 'error',
+    title: 'Add Items Error',
+    text: 'Please make sure ITEM and COUNT fields are filled for all items.'
+  });
+};
+var fieldsEmptyError = function fieldsEmptyError(Swal) {
+  Swal.fire({
+    icon: 'error',
+    title: 'Empty fields Errorr',
+    text: 'All fileds are required, please fill them all'
+  });
+};
+
+/***/ }),
+
 /***/ "./resources/js/app.js":
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
@@ -30246,9 +30274,6 @@ var mutations = {
   },
   SET_USER: function SET_USER(state, user) {
     state.current_user = user;
-  },
-  SET_VARIABLE: function SET_VARIABLE() {
-    state.variable = 'Juan';
   }
 };
 var actions = {
@@ -30362,7 +30387,7 @@ var actions = {
       }, _callee4);
     }))();
   },
-  // STORE CAMPAIGNS
+  // STORE CAMPAIGN
   storeCampaign: function storeCampaign(_ref5, campaign) {
     return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
       var commit;
@@ -30388,6 +30413,61 @@ var actions = {
           }
         }
       }, _callee5);
+    }))();
+  },
+  // UPDATE  CAMPAIGN
+  updateCampaign: function updateCampaign(_ref6, _ref7) {
+    return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
+      var commit, current_campaign, updated_campaign;
+      return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              commit = _ref6.commit;
+              current_campaign = _ref7.current_campaign, updated_campaign = _ref7.updated_campaign;
+              _context6.next = 4;
+              return axios.post("/api/campaigns/".concat(current_campaign.id), _objectSpread(_objectSpread({}, updated_campaign), {}, {
+                _method: 'PUT'
+              }), {
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+              }).then(function (response) {
+                console.log(response);
+              })["catch"](function (error) {
+                console.log(error);
+              });
+            case 4:
+            case "end":
+              return _context6.stop();
+          }
+        }
+      }, _callee6);
+    }))();
+  },
+  // DELETE CAMPAIGN
+  deleteCampaign: function deleteCampaign(_ref8, campaign) {
+    return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
+      var commit;
+      return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+        while (1) {
+          switch (_context7.prev = _context7.next) {
+            case 0:
+              commit = _ref8.commit;
+              axios.post("/api/campaigns/".concat(campaign.id), _objectSpread(_objectSpread({}, campaign), {}, {
+                _method: 'DELETE'
+              })).then(function (response) {
+                // window.location.href = this.route('campaigns.index');
+                console.log(response);
+              })["catch"](function (error) {
+                console.log(error);
+              });
+            case 2:
+            case "end":
+              return _context7.stop();
+          }
+        }
+      }, _callee7);
     }))();
   }
 };

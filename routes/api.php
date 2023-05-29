@@ -100,10 +100,8 @@ Route::post('/campaigns', function (Request $request){
 
 Route::put('/campaigns/{campaign}', function(Request $request, Campaign $campaign) { 
 
-    $data = $request->json()->all();
+    $data = $request->input();
     $campaign = Campaign::find($request->id);
-
-
 
     // $campaign = Campaign::find($request->id);
     $campaign->update($data);
@@ -132,6 +130,10 @@ Route::put('/campaigns/{campaign}', function(Request $request, Campaign $campaig
     return $campaign;
 });
 
+Route::delete('/campaigns/{campaign}', function(Campaign $campaign) {
+    
+    $campaign->delete();
+});
 
 // ITEMS ----------------------------------------------------------
 // GET  ITEMS
