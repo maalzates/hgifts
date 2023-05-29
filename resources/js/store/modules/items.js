@@ -21,17 +21,18 @@ const actions = {
     },
 
     async storeItem({commit}, item) {
-        const response = axios.post('/api/items',item)
-            .then(res => {
-                console.log(response);
-                return res
+        const res = axios.post('/api/items',item)
+            .then(response => {
+                // console.log(responseponse);
+                return response
             })
             .catch(err => {
                 return err
             })
     },
+
     async updateItem({commit}, item) {
-        const response = await axios.post(`/api/items/${item.id}`, {
+        const res = await axios.post(`/api/items/${item.id}`, {
                 ...item,
                 _method: 'PUT',    
             })
@@ -43,9 +44,9 @@ const actions = {
                 console.log(error);
             });
     },
+    
     async deleteItem({commit}, item ){
-        // console.log(item);
-        const response = await axios.post(`/api/items/${item.id}`, {
+        const res = await axios.post(`/api/items/${item.id}`, {
                 item,
                 _method: 'DELETE',    
             })

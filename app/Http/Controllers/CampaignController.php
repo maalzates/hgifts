@@ -147,16 +147,16 @@ class CampaignController extends Controller
      */
     public function edit(Campaign $campaign)
     {
-        // $items =  Item::all();
-        // $users = User::all();
+        $items =  Item::all();
+        $users = User::all();
 
-        // $items_pivot = $campaign->items->pluck('pivot');
-        // $users_subscribed = $campaign->users;
+        $items_pivot = $campaign->items->pluck('pivot');
+        $users_subscribed = $campaign->users;
 
-        // $is_admin = Gate::allows('admin');
+        $is_admin = Gate::allows('admin');
 
-        // return Inertia::render('Campaign/Edit', compact('campaign', 'items', 'items_pivot', 'users', 'users_subscribed', 'is_admin'));
-        return Inertia::render('Campaign/Edit');
+        return Inertia::render('Campaign/Edit', compact('campaign', 'items', 'items_pivot', 'users', 'users_subscribed', 'is_admin'));
+        // return Inertia::render('Campaign/Edit');
 
 
     }
@@ -171,49 +171,49 @@ class CampaignController extends Controller
     public function update(Request $request, Campaign $campaign)
     {
 
-        $data = $request->json()->all();
-        $campaign = Campaign::find($request->id);
+        // $data = $request->json()->all();
+        // $campaign = Campaign::find($request->id);
 
-        // UPDATING RATING for this campaign
-        if ($request['is_rating']) {
+        // // UPDATING RATING for this campaign
+        // if ($request['is_rating']) {
            
-            $campaign->users()->syncWithoutDetaching([$request['user'] => ['score' => $request['score']]]);
-            // return redirect()->back()->with('success', 'Model updated successfully!');
-            return response()->json([
-                'message' => 'Rating updated successfully'
-            ]);
+        //     $campaign->users()->syncWithoutDetaching([$request['user'] => ['score' => $request['score']]]);
+        //     // return redirect()->back()->with('success', 'Model updated successfully!');
+        //     return response()->json([
+        //         'message' => 'Rating updated successfully'
+        //     ]);
 
-        } else {
+        // } else {
             
-            $campaign = Campaign::find($request->id);
-            $campaign->update($data);
+        //     $campaign = Campaign::find($request->id);
+        //     $campaign->update($data);
             
-            // UPDATING PIVOT (campaign_item) TABLE WITH EXTRA FIELD
-            // Formatting the data as we need in the sync function, array with item_id as key, and value as another array with key 'field_name' => field_value
-            // $payload = [
-            //              1 => ['count' => 10],
-            //              5 => ['count' => 3],
-            //              8 => ['count' => 7],
-            // ];
+        //     // UPDATING PIVOT (campaign_item) TABLE WITH EXTRA FIELD
+        //     // Formatting the data as we need in the sync function, array with item_id as key, and value as another array with key 'field_name' => field_value
+        //     // $payload = [
+        //     //              1 => ['count' => 10],
+        //     //              5 => ['count' => 3],
+        //     //              8 => ['count' => 7],
+        //     // ];
     
-            $items = $request->items;
-            $payload = [];
+        //     $items = $request->items;
+        //     $payload = [];
             
-            foreach ($items as $item) {
-                $payload[$item['item_id']] = ['count' => $item['count']];
-            };
-            $campaign->items()->sync($payload);
-            //------------------------------
+        //     foreach ($items as $item) {
+        //         $payload[$item['item_id']] = ['count' => $item['count']];
+        //     };
+        //     $campaign->items()->sync($payload);
+        //     //------------------------------
     
-            // UPDATING USERS ATTACHED TO THIS CAMPAIGN
-            $users = $request->users;
-            $campaign->users()->sync($users);
-            //-----------------
+        //     // UPDATING USERS ATTACHED TO THIS CAMPAIGN
+        //     $users = $request->users;
+        //     $campaign->users()->sync($users);
+        //     //-----------------
     
     
-            return redirect()->route('campaigns.index');
-            // return redirect()->back()->with('success', 'Updated successfully');
-        }
+        //     return redirect()->route('campaigns.index');
+        //     // return redirect()->back()->with('success', 'Updated successfully');
+        // }
     }
 
     /**

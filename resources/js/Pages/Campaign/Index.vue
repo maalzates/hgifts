@@ -5,6 +5,9 @@
             <h2 class="flex font-semibold text-xl text-gray-800 leading-tight">
             Campaigns 
             </h2>
+            <div class="flex flex-col">
+                <Link  :href="route('campaigns.create')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" v-if="this.is_admin"> Create New</Link>
+            </div>
         </div>
         <div v-if="!this.is_admin" class="mt-2" ><span class="font-bold mr-2 ">Filters</span>
          <!-- <button @click="today()" class="btn mr-2 bg-blue-500"> All</button> -->
@@ -523,7 +526,7 @@ export default {
         }
     },
     computed: {
-        ...mapState("campaigns", ["all_campaigns",'active_campaigns', 'subscribed_campaigns', 'active_or_subscribed_campaigns', 'is_admin',"current_user", "variable"])
+        ...mapState("campaigns", ["all_campaigns",'active_campaigns', 'subscribed_campaigns', 'active_or_subscribed_campaigns','is_admin' ,"current_user", "variable"])
         // ...mapGetters('campaigns', ['active_campaigns', 'subscribed_campaigns', 'subscribed_or_active_campaigns'])
     },
     created(){
@@ -571,6 +574,7 @@ export default {
             this.subscribed_filter = false;
         },
         isBoxViewable( delivery_date) {
+            // isBoxVisible(delivery_date);
             // Checking if the Box content is viewable based on delivery_date
             let now = moment().format();
             if ( delivery_date > now) {

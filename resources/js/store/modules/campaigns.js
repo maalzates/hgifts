@@ -87,6 +87,22 @@ const actions = {
     .catch(error => {
         console.log(error);
     });
+  },
+
+  // STORE CAMPAIGNS
+  async storeCampaign( {commit}, campaign) {
+    await  axios.post('/api/campaigns', campaign, {
+      headers: {'Content-Type': 'application/json'}
+    })
+      .then(res => {
+          console.log(res.data);
+          // window.location.href = '/campaigns/' + res.data.id + '/edit';
+      })
+      .catch(err => {
+          console.error(err); 
+      })
+
+    // console.log(campaign);
   }
 };
   

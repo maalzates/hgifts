@@ -1,9 +1,10 @@
 <template>
     <app-layout :is_admin="this.is_admin">
     <template #header>
-      <h2 class="flex font-semibold text-xl text-gray-800 leading-tight"> Create New Campaign</h2>
+      <h2 class="flex font-semibold text-xl text-gray-800 leading-tight"> Edit Campaign - {{form.name}}</h2>
+      <!-- {{this.users}} -->
     </template>
-    <!-- Create form -->
+    <!-- Edit form -->
     <div class="bg-white px-6 py-8 rounded-lg shadow">
         <div class="grid grid-cols-2 gap-6">
             <div>
@@ -18,8 +19,9 @@
                 <label>
                     Status
                 <select v-model="form.status" class="w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+
                     <option value="" selected disabled>Seleccione una opción</option>
-                    <option value="preparing">Preparing</option>
+                    <option value="preparing"  >Preparing</option>
                     <option value="ready">Ready</option>
                     <option value="dispatched">Dispatched</option>
                     </select>
@@ -28,15 +30,15 @@
             </div>
             <div>
                 <label>
-                    Dispatch Day
-                    <Input v-model="form.dispatch_day" type="date" class="w-full"/>
+                    Dispatch Day {{form.dispatch_date}}
+                    <Input v-model="form.dispatch_date" type="date" class="w-full"/>
 
                 </label>
             </div>
             <div>
                 <label>
-                    Delivery Day
-                    <Input v-model="form.delivery_day" type="date" class="w-full"/>
+                    Delivery Day {{form.delivery_date}}
+                    <Input v-model="form.delivery_date" type="date" class="w-full"/>
                 </label>
             </div>
                             <!-- ADD ITEMS {{form.items}} -->
@@ -46,7 +48,7 @@
                 </template>
                 <template #content> 
                     <div class="flex">                           
-                        <button class=" mr-3 justify-end text-white-500 bg-violet-600 font-bold px-3 py-2 text-white outline-none focus:outline-none mr-1 mb-1 rounded ease-linear transition-all duration-150" @click="addItem">Agregar item </button>
+                        <button class=" mr-3 justify-end text-white-500 bg-violet-600 font-bold px-3 py-2 text-white outline-none focus:outline-none mr-1 mb-1 rounded ease-linear transition-all duration-150" @click="addItem">Add item </button>
                     </div>
                     <label>
                         <!-- <table v-for="(item, i) in items" :key="i" > -->
@@ -60,7 +62,7 @@
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr v-for="(form_item, index) in form.items" :key="index">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <select  v-model="form_item.id" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                                        <select  v-model="form_item.item_id" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
                                             <option v-for="(item, index) in items" :key="index" :value="item.id"  >{{item.name}} </option>
                                         </select>
                                     </td>
@@ -76,16 +78,17 @@
                     </label>
                 </template>
             </AddItemModal>
-            <!-- MultiSelect -->
+                        <!-- MultiSelect -->
             <div>
                 <VueMultiselect v-model="selected_users" :options="options" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Add users" label="name" track-by="name" :preselect-first="true">
                     <template><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} Selected Users</span></template>
                 </VueMultiselect>
+                <!-- {{this.form.users}} -->
             </div>
-
         </div>
         <div class="flex justify-end">
-            <button  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3" @click="store"> Create new</button>
+                <button  class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3 mr-3" @click="destroy"> Delete </button>
+                <button  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3" @click="update"> Update </button>
         </div>
     </div>
   </app-layout>
@@ -96,10 +99,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import Input from "../../Jetstream/Input.vue";
 import AddItemModal from '@/Jetstream/AddItemModal.vue';
 import axios from 'axios';
-import VueMultiselect from 'vue-multiselect'
-import { mapActions } from 'vuex';
-
-
+import VueMultiselect from 'vue-multiselect';
 
 
 export default {
@@ -110,11 +110,25 @@ export default {
         VueMultiselect
     },
     props: {
-        items: {
+        items: { 
+          // Is the $campaign->items relationship. An array that includes the pivot key. This contains all items information.
+          // This will help us to show the items information dynamically in dropdownbox list and pick up each option value as item.id.
             type: Object
         },
+        items_pivot:{
+          // Includes only the pivot key from each item record. This will help us to sync the add-items model data.
+          type: Object
+        },
+        campaign:{
+          type: Object
+        },
+        // All available users. This will help us to choose any user we want from the users database in our MultipleSelect Component
         users: {
-            type: Object
+            type: Object,
+        },
+        // Only users which are subscribed to this campaign, this will help us to render in the edit view, the input with the already suscribed users selected. 
+        users_subscribed: {
+            type: Object,
         },
         is_admin: {
             type: Boolean,
@@ -123,38 +137,34 @@ export default {
     data(){
         return {
             form: {
-                name: '',
-                status: [],
-                items: [
-                ],
-                dispatch_day: '',
-                delivery_day: '',
-                users:[]
+              ...this.campaign,
+              items: this.items_pivot
             },
-            selected_users: [],
             options: this.users,
+            selected_users: this.users_subscribed,
         }
     },
     methods:{
-        ...mapActions('campaigns', ['storeCampaign']),
         addItem(){
-            this.form.items.push({id:"''", count:""})
+            this.form.items.push({item_id:'', count:''})
         },
         removeItem(index){
             this.form.items.splice(index, 1)
         },
         isDuplicated(){
             // Checking if the items selected are repeated
-            let items_array = [...this.form.items].map( (item) => item.id);
+
+            //Creating copy of original array and getting it id's
+            let items_array = [...this.form.items].map( (item) => item.item_id);
+            // Checks if the index of the current item is different from its first occurrence in the array, indicating that it is a repeated item.
             let repeated_items = items_array.some( (item, index) => items_array.indexOf(item) != index);
-            console.log(repeated_items);
             return repeated_items;
         },
         isNameOrAmountEmpty(){
             // Check if some of  the selected items is empty
             let items_array = [...this.form.items];
             let validation = items_array.some((item) => Object.values(item).some( value => value === "" ));
-            console.log(validation);
+            console.log(items_array);
             return validation;
         },
         repeatedError(){
@@ -171,18 +181,45 @@ export default {
                 text: 'Please make sure ITEM and COUNT fields are filled for all items.'
             })
         },
-        store(){
-            // Filtering array of users by id, and attaching to form.
-            let uids = this.selected_users.map((user) => user.id);
-            this.form.users = uids;
+        update(){
+        //    let items = this.form.items;
+        //    console.log(items)
+            let uids = this.selected_users.map((user) => user.id); // Get all user ids of the curren editing campaign
+            this.form.users = uids; // Attaching user id's to the form that will be send in the request. 
+
+            // console.log(this.form.items);  
 
             if (this.isDuplicated()) {
                 this.repeatedError();
             } else if (this.isNameOrAmountEmpty()) {
                 this.emptyError();
-            } else {
-                this.storeCampaign(this.form)
+            } else {    
+            // this.$inertia.put(this.route('campaigns.update', this.campaign), this.form);                    
+            axios.post(`/campaigns/${this.campaign.id}`, {
+                    ...this.form,
+                    _method: 'PUT',    
+                })
+                .then((response) => {
+                    console.log(response);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
             }
+            
+        },
+        destroy(){
+            axios.post(`/campaigns/${this.campaign.id}`, {
+                    ...this.form,
+                    _method: 'DELETE',    
+                })
+            .then(response => {
+                window.location.href = this.route('campaigns.index');
+                console.log(response);
+            })
+            .catch(error => {
+                console.log(error);
+            });
         }
     }
 }

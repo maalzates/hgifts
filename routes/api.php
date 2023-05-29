@@ -34,7 +34,6 @@ Route::get('/current-user', function () {
 
 
 // CAMPAIGNS ----------------
-
 // GET CAMPAIGNS
 Route::get('/campaigns', function () {
     //  This will display the list of campaigns for admin roles.
@@ -78,8 +77,63 @@ Route::put('campaigns/{campaign}', function(Request $request, Campaign $campaign
 
 });
 
+// STORE  CAMPAIGN
+Route::post('/campaigns', function (Request $request){
 
-// ITEMS
+    // dd($request->json());
+
+    $campaign = Campaign::create($request->input());
+    $items = collect($request->items);
+    $users = collect($request->users);
+
+    $campaign->users()->attach($users);
+
+
+    foreach ($items as $key => $item) {
+        $campaign->items()->attach($item['id'], ['count' => $item['count']]);
+    };
+
+    return $campaign;
+
+    // return $request->json();
+});
+
+Route::put('/campaigns/{campaign}', function(Request $request, Campaign $campaign) { 
+
+    $data = $request->json()->all();
+    $campaign = Campaign::find($request->id);
+
+
+
+    // $campaign = Campaign::find($request->id);
+    $campaign->update($data);
+    
+    // UPDATING PIVOT (campaign_item) TABLE WITH EXTRA FIELD
+    // Formatting the data as we need in the sync function, array with item_id as key, and value as another array with key 'field_name' => field_value
+    // $payload = [
+    //              1 => ['count' => 10],
+    //              5 => ['count' => 3],
+    //              8 => ['count' => 7],
+    // ];
+
+    $items = $request->items;
+    $payload = [];
+    
+    foreach ($items as $item) {
+        $payload[$item['item_id']] = ['count' => $item['count']];
+    };
+    $campaign->items()->sync($payload);
+    //------------------------------
+
+    // UPDATING USERS ATTACHED TO THIS CAMPAIGN
+    $users = $request->users;
+    $campaign->users()->sync($users);
+
+    return $campaign;
+});
+
+
+// ITEMS ----------------------------------------------------------
 // GET  ITEMS
 Route::get('/items', function() {
     $items = Item::latest('id')->paginate(8);
@@ -98,7 +152,6 @@ Route::post('/items', function(Request $request) {
 
     return redirect()->route('items.index');
 });
-
 
 // UPDATE ITEM: 
 Route::put('items/{item}', function(Request $request, Item $item){

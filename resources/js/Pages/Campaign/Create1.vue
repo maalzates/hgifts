@@ -97,7 +97,6 @@ import Input from "../../Jetstream/Input.vue";
 import AddItemModal from '@/Jetstream/AddItemModal.vue';
 import axios from 'axios';
 import VueMultiselect from 'vue-multiselect'
-import { mapActions } from 'vuex';
 
 
 
@@ -136,7 +135,6 @@ export default {
         }
     },
     methods:{
-        ...mapActions('campaigns', ['storeCampaign']),
         addItem(){
             this.form.items.push({id:"''", count:""})
         },
@@ -181,8 +179,17 @@ export default {
             } else if (this.isNameOrAmountEmpty()) {
                 this.emptyError();
             } else {
-                this.storeCampaign(this.form)
+                axios.post(this.route('campaigns.store', this.campaign),this.form)
+                .then(res => {
+                    console.log(res.data);
+                    window.location.href = '/campaigns/' + res.data.id + '/edit';
+                })
+                .catch(err => {
+                    console.error(err); 
+                })
             }
+
+            // this.$inertia.post(this.route('campaigns.store'), this.form);
         }
     }
 }
