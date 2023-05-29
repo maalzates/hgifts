@@ -100,7 +100,7 @@ import Input from "../../Jetstream/Input.vue";
 import AddItemModal from '@/Jetstream/AddItemModal.vue';
 import VueMultiselect from 'vue-multiselect';
 import { mapActions } from 'vuex';
-import {emptyError, repeatedError, fieldsEmptyError, isAnyFieldEmpty, areDuplicatedItems, isNameOrAmountEmpty } from '../Helpers/campaigns.js'
+import { emptyError, repeatedError, fieldsEmptyError, isAnyFieldEmpty, areDuplicatedItems, isNameOrAmountEmpty, campaignUpdatedPopup, campaignDeltedPopup } from '../Helpers/campaigns.js'
 
 
 export default {
@@ -162,19 +162,22 @@ export default {
             }
             else if (areDuplicatedItems(this.form.items)) {
                 repeatedError(this.$swal);
-            } else if (isNameOrAmountEmpty(this.form.items)) {
+            }else if (isNameOrAmountEmpty(this.form.items)) {
                 emptyError(this.$swal);
             } else {
                 const data = {
                     current_campaign: this.campaign,
                     updated_campaign: this.form
                 };
-                this.updateCampaign(data)
+                this.updateCampaign(data).then( () => { 
+                    campaignUpdatedPopup(this.$swal);
+                 })
             }
-            
         },
         destroy(){
-            this.deleteCampaign(this.campaign);
+            this.deleteCampaign(this.campaign).then( () => { 
+                campaignDeltedPopup(this.$swal);
+             });
         }
     }
 }

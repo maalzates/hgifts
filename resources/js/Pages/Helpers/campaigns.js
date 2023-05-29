@@ -53,4 +53,20 @@ export const fieldsEmptyError = (Swal) => {
         title: 'Empty fields Errorr',
         text: 'All fileds are required, please fill them all'
     })
- }
+};
+
+export const campaignUpdatedPopup = (Swal) => { 
+    Swal.fire({
+        icon: 'success',
+        title: 'Campaign Updated',
+        text: 'The campaign has been successfully updated',
+    });
+};
+
+export const campaignDeltedPopup = (Swal) => { 
+    Swal.fire({
+        icon: 'success',
+        title: 'Campaign Deleted',
+        text: 'The campaign has been successfully deleted',
+    });
+};

@@ -21406,6 +21406,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.form.items.splice(index, 1);
     },
     update: function update() {
+      var _this = this;
       var uids = this.selected_users.map(function (user) {
         return user.id;
       }); // Get all user ids of the curren editing campaign
@@ -21422,11 +21423,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           current_campaign: this.campaign,
           updated_campaign: this.form
         };
-        this.updateCampaign(data);
+        this.updateCampaign(data).then(function () {
+          (0,_Helpers_campaigns_js__WEBPACK_IMPORTED_MODULE_4__.campaignUpdatedPopup)(_this.$swal);
+        });
       }
     },
     destroy: function destroy() {
-      this.deleteCampaign(this.campaign);
+      var _this2 = this;
+      this.deleteCampaign(this.campaign).then(function () {
+        (0,_Helpers_campaigns_js__WEBPACK_IMPORTED_MODULE_4__.campaignDeltedPopup)(_this2.$swal);
+      });
     }
   })
 });
@@ -30033,6 +30039,8 @@ var itemDeleted = function itemDeleted(Swal) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "areItemsDuplicated": () => (/* binding */ areItemsDuplicated),
+/* harmony export */   "campaignDeltedPopup": () => (/* binding */ campaignDeltedPopup),
+/* harmony export */   "campaignUpdatedPopup": () => (/* binding */ campaignUpdatedPopup),
 /* harmony export */   "emptyError": () => (/* binding */ emptyError),
 /* harmony export */   "fieldsEmptyError": () => (/* binding */ fieldsEmptyError),
 /* harmony export */   "isAnyFieldEmpty": () => (/* binding */ isAnyFieldEmpty),
@@ -30102,6 +30110,20 @@ var fieldsEmptyError = function fieldsEmptyError(Swal) {
     icon: 'error',
     title: 'Empty fields Errorr',
     text: 'All fileds are required, please fill them all'
+  });
+};
+var campaignUpdatedPopup = function campaignUpdatedPopup(Swal) {
+  Swal.fire({
+    icon: 'success',
+    title: 'Campaign Updated',
+    text: 'The campaign has been successfully updated'
+  });
+};
+var campaignDeltedPopup = function campaignDeltedPopup(Swal) {
+  Swal.fire({
+    icon: 'success',
+    title: 'Campaign Deleted',
+    text: 'The campaign has been successfully deleted'
   });
 };
 
