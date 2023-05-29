@@ -169,9 +169,19 @@ Route::delete('items/{item}', function( Item $item){
 
 // USERS -----------------
 
+// GET USERS
 Route::get('/users', function(){
-    $users = User::paginate(8);
+    // Getting users results excluding admin
+    $users = User::where('name', '!=' , 'Manuel Alzate')->paginate(8);
     return response()->json([
         'users' => $users
     ]);
+});
+
+// UPDATE USER roles
+Route::put('/users/{user}', function(Request $request, User $user){
+    // return $request->roles;
+    $user->roles()->sync($request->roles);
+
+    return $user;
 });
