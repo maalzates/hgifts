@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Campaign;
+use App\Models\Comment;
 use App\Models\Item;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -9,8 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -68,6 +67,56 @@ Route::get('/campaigns', function () {
         'is_admin' => $is_admin
     ]);
 });
+
+// GET CAMPAIGNS SHOW INFO
+Route::get('/campaigns/{campaign}/show', function(Campaign $campaign){
+
+    $current_user = Auth::user();
+    $users = $campaign->users()->get();
+    $comments = $campaign->comments()->get();
+
+    // Adding user property to each comment. This will help us in the view to render the propper information.
+
+    // By default, eloquent's belongsTo relation, search for the foreign key, using the name given to the relation
+    // plus "_id". This means, for this to work, the relationship in model Comment, needs to be called user(), insted users()
+    foreach ($comments as $comment) {
+         $comment["user"] = $comment->user;
+    };
+
+    // Getting list of scores for this campaign.   
+    $scores = $campaign->users->pluck('pivot.score');
+    $filtered_scores = $scores->reject(function ($score) {
+        return $score=== '0';
+    });
+
+    // getting the average punctuation for this course. First we convert the array of strings in numbers, then we get the average using the avg() Laravel collections method
+    $average = $filtered_scores->map( function($score) {
+        return (int)$score; // First we convert each number string to integer. Then we get the average.
+    })->avg();
+
+
+    // ----------------------------------------------------
+    $rates = $campaign->users->pluck('pivot');
+    $uid = Auth::id();
+
+    // Checking if the user has already rated. This will be true if at least one of the rate records match the uid with the current authenticated user, and is different to zero (default value).
+    $has_rated = (bool) $rates->contains(function ($rate) use ($uid){ 
+        return $rate['user_id'] === $uid && $rate['score'] !== '0';
+    });
+    // ---------------------------------------------------
+    $is_admin = Gate::allows('admin');
+
+    return response()->json([
+        'current_user' => $current_user,
+        'users' => $users,
+        'comments' => $comments,
+        'scores' => $scores,
+        'average' => $average,
+        'has_rated' => $has_rated,
+        'is_admin' => $is_admin
+    ]);
+
+});
 // EDIT CAMPAIGN
 Route::put('campaigns/{campaign}', function(Request $request, Campaign $campaign) {
     // UPDATING USERS ATTACHED TO THIS CAMPAIGN
@@ -100,33 +149,77 @@ Route::post('/campaigns', function (Request $request){
 // UPDATE
 Route::put('/campaigns/{campaign}', function(Request $request, Campaign $campaign) { 
 
-    $data = $request->input();
+    // $data = $request->input();
+    // $campaign = Campaign::find($request->id);
+
+    // // $campaign = Campaign::find($request->id);
+    // $campaign->update($data);
+    
+    // // UPDATING PIVOT (campaign_item) TABLE WITH EXTRA FIELD
+    // // Formatting the data as we need in the sync function, array with item_id as key, and value as another array with key 'field_name' => field_value
+    // // $payload = [
+    // //              1 => ['count' => 10],
+    // //              5 => ['count' => 3],
+    // //              8 => ['count' => 7],
+    // // ];
+
+    // $items = $request->items;
+    // $payload = [];
+    
+    // foreach ($items as $item) {
+    //     $payload[$item['item_id']] = ['count' => $item['count']];
+    // };
+    // $campaign->items()->sync($payload);
+    // //------------------------------
+
+    // // UPDATING USERS ATTACHED TO THIS CAMPAIGN
+    // $users = $request->users;
+    // $campaign->users()->sync($users);
+
+
+    $data = $request->json()->all();
     $campaign = Campaign::find($request->id);
 
-    // $campaign = Campaign::find($request->id);
-    $campaign->update($data);
-    
-    // UPDATING PIVOT (campaign_item) TABLE WITH EXTRA FIELD
-    // Formatting the data as we need in the sync function, array with item_id as key, and value as another array with key 'field_name' => field_value
-    // $payload = [
-    //              1 => ['count' => 10],
-    //              5 => ['count' => 3],
-    //              8 => ['count' => 7],
-    // ];
+    // UPDATING RATING for this campaign
+    if ($request['is_rating']) {
+        
+        $campaign->users()->syncWithoutDetaching([$request['user'] => ['score' => $request['score']]]);
+        // return redirect()->back()->with('success', 'Model updated successfully!');
+        return response()->json([
+            'message' => 'Rating updated successfully'
+        ]);
 
-    $items = $request->items;
-    $payload = [];
-    
-    foreach ($items as $item) {
-        $payload[$item['item_id']] = ['count' => $item['count']];
-    };
-    $campaign->items()->sync($payload);
-    //------------------------------
+    } else {
+        
+        $campaign = Campaign::find($request->id);
+        $campaign->update($data);
+        
+        // UPDATING PIVOT (campaign_item) TABLE WITH EXTRA FIELD
+        // Formatting the data as we need in the sync function, array with item_id as key, and value as another array with key 'field_name' => field_value
+        // $payload = [
+        //              1 => ['count' => 10],
+        //              5 => ['count' => 3],
+        //              8 => ['count' => 7],
+        // ];
 
-    // UPDATING USERS ATTACHED TO THIS CAMPAIGN
-    $users = $request->users;
-    $campaign->users()->sync($users);
+        $items = $request->items;
+        $payload = [];
+        
+        foreach ($items as $item) {
+            $payload[$item['item_id']] = ['count' => $item['count']];
+        };
+        $campaign->items()->sync($payload);
+        //------------------------------
 
+        // UPDATING USERS ATTACHED TO THIS CAMPAIGN
+        $users = $request->users;
+        $campaign->users()->sync($users);
+        //-----------------
+
+
+        return redirect()->route('campaigns.index');
+        // return redirect()->back()->with('success', 'Updated successfully');
+    }
     return $campaign;
 });
 // DELETE CAMPAIGN
@@ -178,10 +271,17 @@ Route::get('/users', function(){
     ]);
 });
 
-// UPDATE USER roles
+// UPDATE USER ROLES
 Route::put('/users/{user}', function(Request $request, User $user){
     // return $request->roles;
     $user->roles()->sync($request->roles);
 
     return $user;
+});
+
+
+// COMMENTS -------------
+Route::post('/comments', function(Request $request){
+    $new_comment = Comment::create($request->all());
+    return $new_comment;
 });

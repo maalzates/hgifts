@@ -38,7 +38,7 @@
                                                     
                 <!-- COMMENT - RATING BUTTONS -->
                 <div class="flex justify-start border-b-2" >
-                <CommentsModal >
+                <CommentsModal>
                     <template #title>
                         <h2> Add a comment to this Campaign</h2>
                     </template>
@@ -75,7 +75,7 @@
 
                 <!-- COMMENTs SECTION -->
                 <!-- Card -->
-                <div v-for="comment in comments" :key="comment.id" class="flex flex-col rounded shadow-sm bg-white overflow-hidden"  >
+                <div v-for="comment in this.component_comments" :key="comment.id" class="flex flex-col rounded shadow-sm bg-white overflow-hidden"  >
                 <!-- Card Body -->
                 <div class="p-5 lg:p-6 grow w-full space-y-4 border-b purple">
                     <!-- Media Object: Comment -->
@@ -112,7 +112,6 @@ import RatingModal from "../Components/RatingModal.vue";
 import StarRating from 'vue-star-rating';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { mapActions, mapState } from 'vuex';
 
 
 
@@ -127,7 +126,25 @@ export default {
     props: {
         campaign: {
             type: Object,  
-        }
+        },
+        users: {
+            type: Object,
+        },
+        comments: {
+            type: Object
+        },
+        current_user: {
+            type: Object
+        },
+        average: {
+            type: Number
+        },
+        has_rated: {
+            type: Boolean
+        },
+        is_admin: {
+            type: Boolean,
+        },
     },
     data(){
         return {
@@ -136,39 +153,46 @@ export default {
                 comment: {  
                     content: '',
                     campaign_id: this.campaign.id,
-                    user_id: '',
+                    user_id: this.current_user.id,
                 },
                 score: '',
-                average: '',
-                user: '', // Needed for rating logic
+                average: this.average,
+                user: this.current_user.id, // Needed for rating logic
                 is_rating: false, // We will use for the Controller to know if a raiting is being sent. 
             },
+            component_comments: this.comments,
         }
     },
-    computed:{
-        ...mapState('campaigns', ['current_user','users','comments','scores','average','has_rated','is_admin']),
-    },
     methods:{
-        ...mapActions('campaigns', ['fetchCampaignShowInfo', 'updateCampaign']),
-        ...mapActions('comments', ['storeComment']),
         rate(){
             this.form.is_rating = true; // This will tell the controller that we're updating the rating instead the campaign itself.
             this.form.score = this.form.score.toString();// We need to convert the score to string, since mysql enum values are 0-indexed. In order to save the actual 5, it needs to be a String.
-
-            const data = {
-                current_campaign: this.campaign,
-                updated_campaign: this.form
-            };
-
-            this.updateCampaign(data).then( () => {
+            
+            // this.$inertia.put(this.route('campaigns.update', this.campaign), this.form);
+            
+            axios.put(`/campaigns/${this.campaign.id}`, {
+                ...this.form,
+                 _method: 'PUT',    
+            })
+            .then((response) => {
+                console.log(response);
                 window.location.reload();
+                this.form.is_rating = false;
+            })
+            .catch(error => {
+                console.log(error);
             });
         },
         sendComment() {
-            this.storeComment(this.form.comment).then( () => { 
-                this.fetchCampaignShowInfo(this.campaign).then( () => {
-                    
-                });
+            // this.$inertia.post(this.route('comments.store'), this.form.comment);
+            axios.post('/comments', this.form.comment)
+            .then(response => {
+                window.location.reload();
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+                // Handle the error here
             });
         },
         
@@ -195,13 +219,6 @@ export default {
             doc.save('addresses.pdf')
             
         }
-    },
-    created(){
-        this.fetchCampaignShowInfo(this.campaign).then( () =>{
-            this.form.comment.user_id = this.current_user.id;
-            this.form.average = this.average;
-            this.form.user = this.current_user.id;
-        });
     }
 
 }

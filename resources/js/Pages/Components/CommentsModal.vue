@@ -52,7 +52,7 @@ const toggleModal = () => {
             <!-- <button class="text-blue-500 background-transparent font-bold px-3 py-1 text-xs outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" @click="toggleModal">close</button> -->
             <slot name="footer" />
             <button class="px-3 py-2 text-sm text-blue-600 border border-blue-500 rounded ml-2"  @click="toggleModal">
-            Cancel
+            Close
             </button>
         </div>
     </Modal>

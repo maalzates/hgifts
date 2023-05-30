@@ -6,6 +6,11 @@ const state = {
   active_or_subscribed_campaigns: [],
   is_admin: null,
   current_user: null,
+  users: null,
+  commentS: null,
+  scores: null,
+  average: null,
+  has_rated: null
 };
 
 const mutations = {
@@ -24,10 +29,27 @@ const mutations = {
   SET_IS_ADMIN(state, is_admin) {
     state.is_admin = is_admin;
   },
-
   SET_USER (state, user) {
     state.current_user = user
-  }
+  },
+  SET_USERS (state, users) {
+    state.users = users
+  },
+  SET_COMMENTS (state, comments) {
+    state.comments = comments
+  },
+  SET_SCORES (state, scores) {
+    state.scores = scores
+  },
+  SET_AVERAGE (state, average) {
+    state.average = average
+  },
+  SET_HAS_RATED (state, has_rated) {
+    state.has_rated = has_rated
+  },
+  SET_CURRENT_USER (state, current_user) {
+    state.current_user = current_user
+  },
 
 };
 
@@ -132,8 +154,25 @@ const actions = {
     .catch(error => {
       console.log(error);
     });
-  }
+  },
 
+  // FETCH CAMPAIGN SHOW VIEW INFO
+  async fetchCampaignShowInfo({commit}, campaign) {
+    try {
+      const  response = await axios.get(`/api/campaigns/${campaign.id}/show`);
+      commit('SET_USERS', response.data.users);
+      commit('SET_COMMENTS', response.data.comments);
+      commit('SET_SCORES', response.data.scores);
+      commit('SET_AVERAGE', response.data.average);
+      commit('SET_HAS_RATED', response.data.has_rated);
+      commit('SET_CURRENT_USER', response.data.current_user);
+      commit('SET_IS_ADMIN', response.data.is_admin );
+      console.log(response.data.comments);
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
 };
   
 const getters = {
