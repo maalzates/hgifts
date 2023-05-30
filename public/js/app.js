@@ -21984,10 +21984,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var jspdf__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! jspdf */ "./node_modules/jspdf/dist/jspdf.es.min.js");
 /* harmony import */ var jspdf_autotable__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! jspdf-autotable */ "./node_modules/jspdf-autotable/dist/jspdf.plugin.autotable.js");
 /* harmony import */ var jspdf_autotable__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(jspdf_autotable__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
+/* harmony import */ var _Helpers_campaigns__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Helpers/campaigns */ "./resources/js/Pages/Helpers/campaigns.js");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 
@@ -22024,8 +22026,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     };
   },
 
-  computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_6__.mapState)('campaigns', ['current_user', 'users', 'comments', 'scores', 'average', 'has_rated', 'is_admin'])),
-  methods: _objectSpread(_objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_6__.mapActions)('campaigns', ['fetchCampaignShowInfo', 'updateCampaign'])), (0,vuex__WEBPACK_IMPORTED_MODULE_6__.mapActions)('comments', ['storeComment'])), {}, {
+  computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_7__.mapState)('campaigns', ['current_user', 'users', 'comments', 'scores', 'average', 'has_rated', 'is_admin'])),
+  methods: _objectSpread(_objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_7__.mapActions)('campaigns', ['fetchCampaignShowInfo', 'updateCampaign'])), (0,vuex__WEBPACK_IMPORTED_MODULE_7__.mapActions)('comments', ['storeComment'])), {}, {
     rate: function rate() {
       this.form.is_rating = true; // This will tell the controller that we're updating the rating instead the campaign itself.
       this.form.score = this.form.score.toString(); // We need to convert the score to string, since mysql enum values are 0-indexed. In order to save the actual 5, it needs to be a String.
@@ -22040,9 +22042,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     sendComment: function sendComment() {
       var _this = this;
-      this.storeComment(this.form.comment).then(function () {
-        _this.fetchCampaignShowInfo(_this.campaign).then(function () {});
-      });
+      if ((0,_Helpers_campaigns__WEBPACK_IMPORTED_MODULE_6__.isCommentEmpty)(this.form.comment.content)) {
+        (0,_Helpers_campaigns__WEBPACK_IMPORTED_MODULE_6__.emptyCommentError)(this.$swal);
+      } else {
+        this.storeComment(this.form.comment).then(function () {
+          _this.fetchCampaignShowInfo(_this.campaign).then(function () {
+            (0,_Helpers_campaigns__WEBPACK_IMPORTED_MODULE_6__.commentAddedPopup)(_this.$swal);
+          });
+        });
+      }
     },
     generatePDF: function generatePDF() {
       var doc = new jspdf__WEBPACK_IMPORTED_MODULE_4__["default"]();
@@ -30629,9 +30637,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "areDuplicatedItems": () => (/* binding */ areDuplicatedItems),
 /* harmony export */   "campaignDeltedPopup": () => (/* binding */ campaignDeltedPopup),
 /* harmony export */   "campaignUpdatedPopup": () => (/* binding */ campaignUpdatedPopup),
+/* harmony export */   "commentAddedPopup": () => (/* binding */ commentAddedPopup),
+/* harmony export */   "emptyCommentError": () => (/* binding */ emptyCommentError),
 /* harmony export */   "emptyError": () => (/* binding */ emptyError),
 /* harmony export */   "fieldsEmptyError": () => (/* binding */ fieldsEmptyError),
 /* harmony export */   "isAnyFieldEmpty": () => (/* binding */ isAnyFieldEmpty),
+/* harmony export */   "isCommentEmpty": () => (/* binding */ isCommentEmpty),
 /* harmony export */   "isNameOrAmountEmpty": () => (/* binding */ isNameOrAmountEmpty),
 /* harmony export */   "repeatedError": () => (/* binding */ repeatedError)
 /* harmony export */ });
@@ -30679,6 +30690,9 @@ var isNameOrAmountEmpty = function isNameOrAmountEmpty(form_items) {
   console.log(items_array);
   return validation;
 };
+var isCommentEmpty = function isCommentEmpty(comment) {
+  return comment === '';
+};
 var repeatedError = function repeatedError(Swal) {
   Swal.fire({
     icon: 'error',
@@ -30712,6 +30726,20 @@ var campaignDeltedPopup = function campaignDeltedPopup(Swal) {
     icon: 'success',
     title: 'Campaign Deleted',
     text: 'The campaign has been successfully deleted'
+  });
+};
+var commentAddedPopup = function commentAddedPopup(Swal) {
+  Swal.fire({
+    icon: 'success',
+    title: 'Comment Added',
+    text: 'The comment has been successfully added'
+  });
+};
+var emptyCommentError = function emptyCommentError(Swal) {
+  Swal.fire({
+    icon: 'error',
+    title: 'Empty fields Errorr',
+    text: 'The comment should not be empty, write a comment.'
   });
 };
 

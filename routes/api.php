@@ -117,15 +117,9 @@ Route::get('/campaigns/{campaign}/show', function(Campaign $campaign){
     ]);
 
 });
-// EDIT CAMPAIGN
-Route::put('campaigns/{campaign}', function(Request $request, Campaign $campaign) {
-    // UPDATING USERS ATTACHED TO THIS CAMPAIGN
-    $campaign = Campaign::find($request->id);
-    $users = $request->users;
-    $campaign->users()->sync($users);
-    //-----------------
 
-});
+
+// });
 // STORE  CAMPAIGN
 Route::post('/campaigns', function (Request $request){
 
@@ -146,36 +140,8 @@ Route::post('/campaigns', function (Request $request){
 
     // return $request->json();
 });
-// UPDATE
+// UPDATE CAMPAIGN
 Route::put('/campaigns/{campaign}', function(Request $request, Campaign $campaign) { 
-
-    // $data = $request->input();
-    // $campaign = Campaign::find($request->id);
-
-    // // $campaign = Campaign::find($request->id);
-    // $campaign->update($data);
-    
-    // // UPDATING PIVOT (campaign_item) TABLE WITH EXTRA FIELD
-    // // Formatting the data as we need in the sync function, array with item_id as key, and value as another array with key 'field_name' => field_value
-    // // $payload = [
-    // //              1 => ['count' => 10],
-    // //              5 => ['count' => 3],
-    // //              8 => ['count' => 7],
-    // // ];
-
-    // $items = $request->items;
-    // $payload = [];
-    
-    // foreach ($items as $item) {
-    //     $payload[$item['item_id']] = ['count' => $item['count']];
-    // };
-    // $campaign->items()->sync($payload);
-    // //------------------------------
-
-    // // UPDATING USERS ATTACHED TO THIS CAMPAIGN
-    // $users = $request->users;
-    // $campaign->users()->sync($users);
-
 
     $data = $request->json()->all();
     $campaign = Campaign::find($request->id);
@@ -281,6 +247,8 @@ Route::put('/users/{user}', function(Request $request, User $user){
 
 
 // COMMENTS -------------
+
+// POST COMMENT
 Route::post('/comments', function(Request $request){
     $new_comment = Comment::create($request->all());
     return $new_comment;

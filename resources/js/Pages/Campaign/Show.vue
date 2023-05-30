@@ -113,6 +113,7 @@ import StarRating from 'vue-star-rating';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { mapActions, mapState } from 'vuex';
+import {commentAddedPopup, isCommentEmpty, emptyCommentError} from '../Helpers/campaigns'
 
 
 
@@ -165,11 +166,15 @@ export default {
             });
         },
         sendComment() {
-            this.storeComment(this.form.comment).then( () => { 
-                this.fetchCampaignShowInfo(this.campaign).then( () => {
-                    
+            if (isCommentEmpty(this.form.comment.content)) {
+                emptyCommentError(this.$swal)
+            }else {
+                this.storeComment(this.form.comment).then( () => { 
+                    this.fetchCampaignShowInfo(this.campaign).then( () => {
+                        commentAddedPopup(this.$swal);
+                    });
                 });
-            });
+            }
         },
         
         generatePDF(){

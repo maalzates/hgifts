@@ -31,6 +31,9 @@ export const isNameOrAmountEmpty = (form_items) =>{
     return validation;
 };
 
+export const isCommentEmpty = (comment) => { 
+    return comment === '';
+ }
 export const repeatedError = (Swal) => {
     Swal.fire({
         icon: 'error',
@@ -70,3 +73,19 @@ export const campaignDeltedPopup = (Swal) => {
         text: 'The campaign has been successfully deleted',
     });
 };
+
+export const commentAddedPopup = (Swal) => { 
+    Swal.fire({
+        icon: 'success',
+        title: 'Comment Added',
+        text: 'The comment has been successfully added',
+    });
+};
+
+export const emptyCommentError = (Swal) => { 
+    Swal.fire({
+        icon: 'error',
+        title: 'Empty fields Errorr',
+        text: 'The comment should not be empty, write a comment.'
+    })
+}
