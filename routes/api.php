@@ -232,8 +232,10 @@ Route::delete('items/{item}', function( Item $item){
 Route::get('/users', function(){
     // Getting users results excluding admin
     $users = User::where('name', '!=' , 'Manuel Alzate')->paginate(8);
+    $is_admin = Gate::allows('admin');
     return response()->json([
-        'users' => $users
+        'users' => $users,
+        'is_admin' => $is_admin
     ]);
 });
 

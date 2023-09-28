@@ -79,7 +79,6 @@ Route::get('/comments/create', [CommentController::class, 'create'])->name('comm
 Route::post('comments', [CommentController::class, 'store'])->name('comments.store');
 // Delete
 Route::delete('comments', [CampaignController::class, 'destroy'])->name('comments.destroy')->middleware('web');;
-
 // USERS
 Route::resource('users', UserController::class)->names('users');
 

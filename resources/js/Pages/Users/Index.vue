@@ -1,5 +1,5 @@
 <template>
-<app-layout :is_admin="this.is_admin">
+<app-layout :is_admin="!this.is_admin">
   <template #header>
           <div class="flex justify-between">
           <h2 class="flex font-semibold text-xl text-gray-800 leading-tight">
@@ -65,7 +65,7 @@ export default {
         TailwindPagination
     },
     computed: {
-        ...mapState('users', ['users'])
+        ...mapState('users', ['users', 'is_admin'])
     },
     created(){
         this.fetchUsers();

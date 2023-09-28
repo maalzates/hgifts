@@ -17,8 +17,6 @@
         </div>
     </template>
             <!-- Campaign lists ALL-->
-        <!-- This example requires Tailwind CSS v2.0+ -->
-
      <!-- ADMIN VIEW ---------------------------------------------------------- -->
     <div v-if="this.is_admin" >
         <!-- ACTIVE CAMPAIGNS  -->
@@ -62,7 +60,7 @@
                         </td>
                         <td class="px-6 py-4">
                             <!-- ITEMS -->
-                            <DialogModal >
+                            <GiftBoxModal >
                                 <template #title>
                                     <h1> Items in this box </h1>
                                 </template>
@@ -84,7 +82,7 @@
                                 </template>
                                 <template #footer>
                                 </template>
-                            </DialogModal>
+                            </GiftBoxModal>
                         </td>
                         <td class="px-6 py-4">
                             {{campaign.dispatch_date}}
@@ -131,7 +129,7 @@
             </table>
         </div>
         <div class="flex justify-center align-center">
-            <TailwindPagination :data="active_campaigns" @pagination-change-page="fetchCampaigns"/>
+            <TailwindPagination :data="all_campaigns" @pagination-change-page="fetchCampaigns"/>
         </div>
     </div>
 
@@ -179,7 +177,7 @@
                         </td>
                         <td class="px-6 py-4">
                             <!-- ITEMS -->
-                            <DialogModal v-if="isBoxViewable(campaign.delivery_date)">
+                            <GiftBoxModal v-if="isBoxViewable(campaign.delivery_date)">
                                 <template #title>
                                     <h1> Items in this box </h1>
                                 </template>
@@ -202,7 +200,7 @@
                                 <template #footer>
                                 </template>
 
-                            </DialogModal>
+                            </GiftBoxModal>
                             <span v-else class="h-10 px-2.5 m-2"> 
                                 Secret Content
                             </span>
@@ -298,8 +296,8 @@
                             {{campaign.status}}
                         </td>
                         <td class="px-6 py-4">
-                            <!-- <DialogModal v-if="isBoxViewable(campaign.delivery_date)"> -->
-                            <DialogModal v-if="isBoxViewable(campaign.delivery_date)">
+                            <!-- <GiftBoxModal v-if="isBoxViewable(campaign.delivery_date)"> -->
+                            <GiftBoxModal v-if="isBoxViewable(campaign.delivery_date)">
                                 <template #title>
                                     <h1> Items in this box </h1>
                                 </template>
@@ -322,7 +320,7 @@
                                 <template #footer>
                                 </template>
 
-                            </DialogModal>
+                            </GiftBoxModal>
                             <span v-else class="h-10 px-2.5 m-2"> 
                                 Secret Content
                             </span>
@@ -418,7 +416,7 @@
                             {{campaign.status}}
                         </td>
                         <td class="px-6 py-4">
-                            <DialogModal v-if="isBoxViewable(campaign.delivery_date)">
+                            <GiftBoxModal v-if="isBoxViewable(campaign.delivery_date)">
                                 <template #title>
                                     <h1> Items in this box </h1>
                                 </template>
@@ -441,7 +439,7 @@
                                 <template #footer>
                                 </template>
 
-                            </DialogModal>
+                            </GiftBoxModal>
                             <span v-else class="h-10 px-2.5 m-2"> 
                                 Secret Content
                             </span>
@@ -504,7 +502,7 @@
 import AppLayout from '../../Layouts/AppLayout.vue';
 import { mapActions, mapState} from 'vuex';
 import { TailwindPagination } from 'laravel-vue-pagination';
-import DialogModal from '../Components/DialogModal';
+import GiftBoxModal from '../Components/GiftBoxModal';
 import UsersModal from '../Components/UsersModal'
 import moment from 'moment';
 import { Link } from '@inertiajs/inertia-vue3';
@@ -513,15 +511,15 @@ export default {
     components: {
         AppLayout,
         TailwindPagination,
-        DialogModal,
+        GiftBoxModal,
         UsersModal,
         Link
     },
     data(){
         return {
             active_filter: null,
-            subscribed_filter: null,
-            active_or_subscribed_filter: true,
+            subscribed_filter: true,
+            active_or_subscribed_filter: null,
             form: {}
         }
     },
