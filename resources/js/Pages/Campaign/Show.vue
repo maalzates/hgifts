@@ -3,7 +3,7 @@
     <template #header>
         <div class="flex justify-between">
             <h2 class="flex font-semibold text-xl text-gray-800 leading-tight"> Campaign - {{campaign.name}}</h2> 
-            <button v-if="this.is_admin" @click="generatePDF">
+            <button v-if="this.is_admin" @click="generatePDF" class="text-purple-800 hover:text-purple-600 active:text-black">
                 <i class="fa-solid fa-print fa-xl"></i>
                <br>
                 Print addresses
@@ -80,7 +80,6 @@
                 <!-- COMMENTs SECTION -->
                 <!-- Card -->
                 <div class="relative">
-
                     <div v-for="(comment, index) in comments.slice(0, initialCommentsCount)" :key="comment.id" class="flex flex-col rounded shadow-sm bg-white overflow-hidden">
 
                     <!-- Card Body -->
@@ -88,12 +87,12 @@
                         <!-- Media Object: Comment -->
                         <div class="flex space-x-4">
                         <!-- Avatar -->
-                        <img src="https://cdn.tailkit.com/media/placeholders/avatar-mEZ3PoFGs_k-160x160.jpg" alt="User Avatar" class="flex-none inline-block w-8 h-8 sm:w-12 sm:h-12 rounded-full mt-1">
+                        <img :src="comment.user.profile_photo_url" alt="User Avatar" class="flex-none inline-block w-8 h-8 sm:w-12 sm:h-12 rounded-full mt-1">
 
                         <!-- Content -->
                         <div class="grow text-sm flex flex-column align-center">
                             <p class="mb-1 align-self">
-                            <a href="javascript:void(0)" class="font-semibold text-blue-600 hover:text-blue-400">{{comment.user.name}}</a>
+                            <p href="javascript:void(0)" class="font-bold text-black-800 hover:text-black-400">{{comment.user.name}}</p>
                             {{comment.content}}
                             </p>
                         </div>
@@ -103,7 +102,7 @@
                     </div>
                     <!-- END Card Body -->
                     </div>
-                    <button @click="loadMoreComments" v-if="showReadMoreButton" class="my-4 p-2 text-black mx-auto block">
+                    <button @click="loadMoreComments" v-if="showReadMoreButton" class="my-4 p-2 text-purple-800 mx-auto block hover:text-purple-600 active:text-black">
                     Read More Comments
                     <br>
                     <i class="fa-solid fa-angle-down fa-xl"></i>

@@ -31,7 +31,7 @@ const toggleModal = () => {
 
 <template>
 <div>
-    <button class="text-blue-500 background-transparent font-bold px-3 py-1 text-base outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" @click="toggleModal">Add a comment</button>
+    <button class="text-white bg-purple-800 rounded-md font-bold px-3 py-2 text-base outline-none focus:outline-none mx-1 my-2 ease-linear transition-all duration-150 hover:bg-purple-600 active:bg-transparent active:text-black active:outline-1 active:outline-black" @click="toggleModal">Add a comment</button>
     <Modal
         :show="show"
         :max-width="maxWidth"
