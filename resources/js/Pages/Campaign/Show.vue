@@ -3,7 +3,11 @@
     <template #header>
         <div class="flex justify-between">
             <h2 class="flex font-semibold text-xl text-gray-800 leading-tight"> Campaign - {{campaign.name}}</h2> 
-            <button @click="generatePDF">Print User Addresses</button>
+            <button v-if="this.is_admin" @click="generatePDF">
+                <i class="fa-solid fa-print fa-xl"></i>
+               <br>
+                Print addresses
+            </button>
         </div>
       <!-- {{this.users}} -->
     </template>
@@ -75,26 +79,35 @@
 
                 <!-- COMMENTs SECTION -->
                 <!-- Card -->
-                <div v-for="comment in comments" :key="comment.id" class="flex flex-col rounded shadow-sm bg-white overflow-hidden"  >
-                <!-- Card Body -->
-                <div class="p-5 lg:p-6 grow w-full space-y-4 border-b purple">
-                    <!-- Media Object: Comment -->
-                    <div class="flex space-x-4">
-                    <!-- Avatar -->
-                    <img src="https://cdn.tailkit.com/media/placeholders/avatar-mEZ3PoFGs_k-160x160.jpg" alt="User Avatar" class="flex-none inline-block w-8 h-8 sm:w-12 sm:h-12 rounded-full mt-1">
+                <div class="relative">
 
-                    <!-- Content -->
-                    <div class="grow text-sm flex flex-column align-center">
-                        <p class="mb-1 align-self">
-                        <a href="javascript:void(0)" class="font-semibold text-blue-600 hover:text-blue-400">{{comment.user.name}}</a>
-                        {{comment.content}}
-                        </p>
+                    <div v-for="(comment, index) in comments.slice(0, initialCommentsCount)" :key="comment.id" class="flex flex-col rounded shadow-sm bg-white overflow-hidden">
+
+                    <!-- Card Body -->
+                    <div class="p-5 lg:p-6 grow w-full space-y-4 border-b purple">
+                        <!-- Media Object: Comment -->
+                        <div class="flex space-x-4">
+                        <!-- Avatar -->
+                        <img src="https://cdn.tailkit.com/media/placeholders/avatar-mEZ3PoFGs_k-160x160.jpg" alt="User Avatar" class="flex-none inline-block w-8 h-8 sm:w-12 sm:h-12 rounded-full mt-1">
+
+                        <!-- Content -->
+                        <div class="grow text-sm flex flex-column align-center">
+                            <p class="mb-1 align-self">
+                            <a href="javascript:void(0)" class="font-semibold text-blue-600 hover:text-blue-400">{{comment.user.name}}</a>
+                            {{comment.content}}
+                            </p>
+                        </div>
+                        <!-- END Content -->
+                        </div>
+                        <!-- END Media Object: Comment -->
                     </div>
-                    <!-- END Content -->
+                    <!-- END Card Body -->
                     </div>
-                    <!-- END Media Object: Comment -->
-                </div>
-                <!-- END Card Body -->
+                    <button @click="loadMoreComments" v-if="showReadMoreButton" class="my-4 p-2 text-black mx-auto block">
+                    Read More Comments
+                    <br>
+                    <i class="fa-solid fa-angle-down fa-xl"></i>
+                    </button>
                 </div>
                 <!-- END Card -->
                 </dl>
@@ -113,8 +126,7 @@ import StarRating from 'vue-star-rating';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { mapActions, mapState } from 'vuex';
-import {commentAddedPopup, isCommentEmpty, emptyCommentError} from '../Helpers/campaigns'
-
+import {commentAddedPopup, isCommentEmpty, emptyCommentError} from '../Helpers/campaigns';
 
 
 
@@ -142,12 +154,19 @@ export default {
                 score: '',
                 average: '',
                 user: '', // Needed for rating logic
-                is_rating: false, // We will use for the Controller to know if a raiting is being sent. 
+                is_rating: false, // We will use for the Controller to know if a raiting is being sent.
+                comments: this.comments,
             },
+            initialCommentsCount: 5, // Number of comments to display initially
+            commentsToAdd: 5,        // Number of comments to add each time
+
         }
     },
     computed:{
         ...mapState('campaigns', ['current_user','users','comments','scores','average','has_rated','is_admin']),
+        showReadMoreButton() {
+            return this.initialCommentsCount < this.comments.length;
+        },
     },
     methods:{
         ...mapActions('campaigns', ['fetchCampaignShowInfo', 'updateCampaign']),
@@ -173,6 +192,7 @@ export default {
                     this.fetchCampaignShowInfo(this.campaign).then( () => {
                         commentAddedPopup(this.$swal);
                     });
+                    window.location.reload();
                 });
             }
         },
@@ -199,7 +219,10 @@ export default {
 
             doc.save('addresses.pdf')
             
-        }
+        },
+        loadMoreComments() {
+            this.initialCommentsCount += this.commentsToAdd;
+        },
     },
     created(){
         this.fetchCampaignShowInfo(this.campaign).then( () =>{

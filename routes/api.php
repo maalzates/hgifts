@@ -73,7 +73,8 @@ Route::get('/campaigns/{campaign}/show', function(Campaign $campaign){
 
     $current_user = Auth::user();
     $users = $campaign->users()->get();
-    $comments = $campaign->comments()->get();
+    // $comments = $campaign->comments()->get();
+    $comments = $campaign->comments()->latest('id')->get();
 
     // Adding user property to each comment. This will help us in the view to render the propper information.
 

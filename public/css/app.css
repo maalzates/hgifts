@@ -844,6 +844,8 @@ video {
   right: 0px;
 }.top-0 {
   top: 0px;
+}.bottom-0 {
+  bottom: 0px;
 }.z-0 {
   z-index: 0;
 }.z-50 {
@@ -862,6 +864,9 @@ video {
 }.-my-2 {
   margin-top: -0.5rem;
   margin-bottom: -0.5rem;
+}.my-4 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }.ml-3 {
   margin-left: 0.75rem;
 }.-ml-px {
@@ -908,12 +913,12 @@ video {
   margin-left: 1.5rem;
 }.mb-4 {
   margin-bottom: 1rem;
-}.-mt-px {
-  margin-top: -1px;
 }.mr-1 {
   margin-right: 0.25rem;
 }.mb-1 {
   margin-bottom: 0.25rem;
+}.-mt-px {
+  margin-top: -1px;
 }.mb-2 {
   margin-bottom: 0.5rem;
 }.mr-5 {
@@ -1163,9 +1168,6 @@ video {
 }.border-gray-100 {
   --tw-border-opacity: 1;
   border-color: rgb(243 244 246 / var(--tw-border-opacity));
-}.border-gray-400 {
-  --tw-border-opacity: 1;
-  border-color: rgb(156 163 175 / var(--tw-border-opacity));
 }.border-gray-700 {
   --tw-border-opacity: 1;
   border-color: rgb(55 65 81 / var(--tw-border-opacity));
@@ -1175,6 +1177,9 @@ video {
 }.border-indigo-500 {
   --tw-border-opacity: 1;
   border-color: rgb(99 102 241 / var(--tw-border-opacity));
+}.border-gray-400 {
+  --tw-border-opacity: 1;
+  border-color: rgb(156 163 175 / var(--tw-border-opacity));
 }.bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
@@ -1424,12 +1429,6 @@ video {
 }.text-green-500 {
   --tw-text-opacity: 1;
   color: rgb(34 197 94 / var(--tw-text-opacity));
-}.text-gray-200 {
-  --tw-text-opacity: 1;
-  color: rgb(229 231 235 / var(--tw-text-opacity));
-}.text-gray-300 {
-  --tw-text-opacity: 1;
-  color: rgb(209 213 219 / var(--tw-text-opacity));
 }.text-blue-500 {
   --tw-text-opacity: 1;
   color: rgb(59 130 246 / var(--tw-text-opacity));
@@ -1445,6 +1444,15 @@ video {
 }.text-gray-100 {
   --tw-text-opacity: 1;
   color: rgb(243 244 246 / var(--tw-text-opacity));
+}.text-gray-200 {
+  --tw-text-opacity: 1;
+  color: rgb(229 231 235 / var(--tw-text-opacity));
+}.text-gray-300 {
+  --tw-text-opacity: 1;
+  color: rgb(209 213 219 / var(--tw-text-opacity));
+}.text-black {
+  --tw-text-opacity: 1;
+  color: rgb(0 0 0 / var(--tw-text-opacity));
 }.underline {
   -webkit-text-decoration-line: underline;
           text-decoration-line: underline;

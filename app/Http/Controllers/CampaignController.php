@@ -101,42 +101,43 @@ class CampaignController extends Controller
     public function show(Campaign $campaign)
 
     {
-        $current_user = Auth::user();
-        $users = $campaign->users()->get();
-        $comments = $campaign->comments()->get();
+        // $current_user = Auth::user();
+        // $users = $campaign->users()->get();
+        // $comments = $campaign->comments()->get();
 
-        // Adding user property to each comment. This will help us in the view to render the propper information.
+        // // Adding user property to each comment. This will help us in the view to render the propper information.
 
-        // By default, eloquent's belongsTo relation, search for the foreign key, using the name given to the relation
-        // plus "_id". This means, for this to work, the relationship in model Comment, needs to be called user(), insted users()
-        foreach ($comments as $comment) {
-             $comment["user"] = $comment->user;
-        }
+        // // By default, eloquent's belongsTo relation, search for the foreign key, using the name given to the relation
+        // // plus "_id". This means, for this to work, the relationship in model Comment, needs to be called user(), insted users()
+        // foreach ($comments as $comment) {
+        //      $comment["user"] = $comment->user;
+        // }
 
-        // Getting list of scores for this campaign.   
-        $scores = $campaign->users->pluck('pivot.score');
-        $filtered_scores = $scores->reject(function ($score) {
-            return $score=== '0';
-        });
+        // // Getting list of scores for this campaign.   
+        // $scores = $campaign->users->pluck('pivot.score');
+        // $filtered_scores = $scores->reject(function ($score) {
+        //     return $score=== '0';
+        // });
 
-        // getting the average punctuation for this course. First we convert the array of strings in numbers, then we get the average using the avg() Laravel collections method
-        $average = $filtered_scores->map( function($score) {
-            return (int)$score; // First we convert each number string to integer. Then we get the average.
-        })->avg();
+        // // getting the average punctuation for this course. First we convert the array of strings in numbers, then we get the average using the avg() Laravel collections method
+        // $average = $filtered_scores->map( function($score) {
+        //     return (int)$score; // First we convert each number string to integer. Then we get the average.
+        // })->avg();
 
 
-        // ----------------------------------------------------
-        $rates = $campaign->users->pluck('pivot');
-        $uid = Auth::id();
+        // // ----------------------------------------------------
+        // $rates = $campaign->users->pluck('pivot');
+        // $uid = Auth::id();
 
-        // Checking if the user has already rated. This will be true if at least one of the rate records match the uid with the current authenticated user, and is different to zero (default value).
-        $has_rated = (bool) $rates->contains(function ($rate) use ($uid){ 
-            return $rate['user_id'] === $uid && $rate['score'] !== '0';
-        });
-        // ---------------------------------------------------
-        $is_admin = Gate::allows('admin');
+        // // Checking if the user has already rated. This will be true if at least one of the rate records match the uid with the current authenticated user, and is different to zero (default value).
+        // $has_rated = (bool) $rates->contains(function ($rate) use ($uid){ 
+        //     return $rate['user_id'] === $uid && $rate['score'] !== '0';
+        // });
+        // // ---------------------------------------------------
+        // $is_admin = Gate::allows('admin');
 
-        return Inertia::render('Campaign/Show', compact('campaign', 'users', 'current_user', 'comments', 'scores', 'average', 'has_rated', 'is_admin'));
+        // return Inertia::render('Campaign/Show', compact('campaign', 'users', 'current_user', 'comments', 'scores', 'average', 'has_rated', 'is_admin'));
+        return Inertia::render('Campaign/Show', compact('campaign'));
     }
 
     /**

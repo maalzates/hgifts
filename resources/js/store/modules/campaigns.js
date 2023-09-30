@@ -7,7 +7,7 @@ const state = {
   is_admin: null,
   current_user: null,
   users: null,
-  commentS: null,
+  comments: [],
   scores: null,
   average: null,
   has_rated: null
@@ -167,7 +167,7 @@ const actions = {
       commit('SET_HAS_RATED', response.data.has_rated);
       commit('SET_CURRENT_USER', response.data.current_user);
       commit('SET_IS_ADMIN', response.data.is_admin );
-      console.log(response.data.comments);
+      console.log('response:', response.data.comments);
 
     } catch (error) {
       console.log(error);

@@ -163,7 +163,7 @@
                             SUBSCRIPTION
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            EDIT / SHOW
+                            SHOW
                         </th>
                     </tr>
                 </thead>
@@ -238,9 +238,6 @@
                             <button @click="handleSubscription(campaign)" v-else >Suscribe</button>
                         </td>
                         <td  class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 underline">
-                            <Link :href="route('campaigns.edit', campaign)" class="text-indigo-600 hover:text-indigo-900 mr-5 ml-1.5">
-                                <i class="fas fa-regular fa-pen-to-square"></i>
-                            </Link>
                             <Link :href="route('campaigns.show', campaign)" class="text-indigo-600 hover:text-indigo-900">
                                 <i class="fas fa-chevron-right"></i>
                             </Link>
@@ -283,7 +280,7 @@
                             SUBSCRIPTION
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            EDIT / SHOW
+                            SHOW
                         </th>
                     </tr>
                 </thead>
@@ -358,9 +355,6 @@
                             <button @click="handleSubscription(campaign)" v-else >Suscribe</button>
                         </td>
                         <td  class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 underline">
-                            <Link :href="route('campaigns.edit', campaign)" class="text-indigo-600 hover:text-indigo-900 mr-5 ml-1.5">
-                                <i class="fas fa-regular fa-pen-to-square"></i>
-                            </Link>
                             <Link :href="route('campaigns.show', campaign)" class="text-indigo-600 hover:text-indigo-900">
                                 <i class="fas fa-chevron-right"></i>
                             </Link>
@@ -403,7 +397,7 @@
                             SUBSCRIPTION
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Edit / Show
+                            Show
                         </th>
                     </tr>
                 </thead>
@@ -478,9 +472,6 @@
                             <button @click="handleSubscription(campaign)" v-else >Suscribe</button>
                         </td>
                         <td  class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 underline">
-                            <Link :href="route('campaigns.edit', campaign)" class="text-indigo-600 hover:text-indigo-900 mr-5 ml-1.5">
-                                <i class="fas fa-regular fa-pen-to-square"></i>
-                            </Link>
                             <Link :href="route('campaigns.show', campaign)" class="text-indigo-600 hover:text-indigo-900">
                                 <i class="fas fa-chevron-right"></i>
                             </Link>

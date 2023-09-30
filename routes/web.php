@@ -81,7 +81,7 @@ Route::redirect('/', 'login');
 // // USERS
 // Route::resource('users', UserController::class)->names('users');
 
-
+// ONLY AUTHENTICATED USERS (REGARDELESS THE ROLE) CAN ACCESS
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -91,10 +91,21 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-// CAMPAIGNS
-// List show
-Route::get('/campaigns', [CampaignController::class, 'index'])->name('campaigns.index');
+    // CAMPAIGNS
+    // List show
+    Route::get('/campaigns', [CampaignController::class, 'index'])->name('campaigns.index');
+    // Show view route
+    Route::get('campaigns/{campaign}/show', [CampaignController::class, 'show'])->name('campaigns.show');
+    // Update edited information route
+    Route::put('campaigns/{campaign}', [CampaignController::class, 'update'])->name('campaigns.update');
 
+
+    // COMMENTS 
+    Route::get('/comments/create', [CommentController::class, 'create'])->name('comments.create');
+    //Store
+    Route::post('comments', [CommentController::class, 'store'])->name('comments.store');
+    // Delete
+    Route::delete('comments', [CampaignController::class, 'destroy'])->name('comments.destroy')->middleware('web');;
 });
 
 
@@ -107,41 +118,32 @@ Route::middleware([
 ])->group(function () {
     
     // CAMPAIGNS 
-// Create record route
-Route::get('/campaigns/create', [CampaignController::class, 'create'])->name('campaigns.create');
-// Store the created record route
-Route::post('campaigns', [CampaignController::class, 'store'])->name('campaigns.store');
-// Show view route
-Route::get('campaigns/{campaign}/show', [CampaignController::class, 'show'])->name('campaigns.show');
-// Edit view route
-Route::get('campaigns/{campaign}/edit', [CampaignController::class, 'edit'])->name('campaigns.edit');
-// Update edited information route
-Route::put('campaigns/{campaign}', [CampaignController::class, 'update'])->name('campaigns.update');
-// Delete record route
-Route::delete('campaigns/{campaign}', [CampaignController::class, 'destroy'])->name('campaigns.destroy');
+    // Create record route
+    Route::get('/campaigns/create', [CampaignController::class, 'create'])->name('campaigns.create');
+    // Store the created record route
+    Route::post('campaigns', [CampaignController::class, 'store'])->name('campaigns.store');
+    // Edit view route
+    Route::get('campaigns/{campaign}/edit', [CampaignController::class, 'edit'])->name('campaigns.edit');
+    // Delete record route
+    Route::delete('campaigns/{campaign}', [CampaignController::class, 'destroy'])->name('campaigns.destroy');
 
-// ITEMS
-// List show
-Route::get('/items', [ItemController::class, 'index'])->name('items.index');
-// Create record route
-Route::get('/items/create', [ItemController::class, 'create'])->name('items.create');
-// Store the created record route
-Route::post('items', [ItemController::class, 'store'])->name('items.store');
-// Edit view route
-Route::get('items/{item}/edit', [ItemController::class, 'edit'])->name('items.edit');
-// Update edited information route
-Route::put('items/{item}', [ItemController::class, 'update'])->name('items.update');
-// Delete record route
-Route::delete('items/{item}', [ItemController::class, 'destroy'])->name('items.destroy');
+    // ITEMS
+    // List show
+    Route::get('/items', [ItemController::class, 'index'])->name('items.index');
+    // Create record route
+    Route::get('/items/create', [ItemController::class, 'create'])->name('items.create');
+    // Store the created record route
+    Route::post('items', [ItemController::class, 'store'])->name('items.store');
+    // Edit view route
+    Route::get('items/{item}/edit', [ItemController::class, 'edit'])->name('items.edit');
+    // Update edited information route
+    Route::put('items/{item}', [ItemController::class, 'update'])->name('items.update');
+    // Delete record route
+    Route::delete('items/{item}', [ItemController::class, 'destroy'])->name('items.destroy');
 
-// COMMENTS 
-Route::get('/comments/create', [CommentController::class, 'create'])->name('comments.create');
-//Store
-Route::post('comments', [CommentController::class, 'store'])->name('comments.store');
-// Delete
-Route::delete('comments', [CampaignController::class, 'destroy'])->name('comments.destroy')->middleware('web');;
-// USERS
-Route::resource('users', UserController::class)->names('users');
+
+    // USERS
+    Route::resource('users', UserController::class)->names('users');
 
 
 });

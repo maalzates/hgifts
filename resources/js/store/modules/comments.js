@@ -11,7 +11,7 @@ const actions = {
         try {
             const response = await axios.post('/api/comments', comment);
             commit('SET_COMMENTS', response.data);
-            console.log(response.data);
+            // console.log(response.data);
         } catch (error) {
             console.log(error);
         }
