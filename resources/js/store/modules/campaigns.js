@@ -4,7 +4,7 @@ const state = {
   active_campaigns:[],
   subscribed_campaigns: [],
   active_or_subscribed_campaigns: [],
-  is_admin: null,
+  is_admin: '',
   current_user: null,
   users: null,
   comments: [],

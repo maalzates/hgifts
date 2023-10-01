@@ -14,6 +14,8 @@ defineProps({
     is_admin: Boolean,
 });
 
+const admin = ref('is_admin');
+
 const showingNavigationDropdown = ref(false);
 
 const switchToTeam = (team) => {
@@ -55,12 +57,12 @@ const logout = () => {
                                     Campaigns
                                 </JetNavLink>
                             </div>
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex" v-if="this.is_admin">
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex" v-if="admin">
                                 <JetNavLink :href="route('items.index')" :active="route().current('items.index')">
                                     Items
                                 </JetNavLink>
                             </div>
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex" v-if="this.is_admin">
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex" v-if="admin">
                                 <JetNavLink :href="route('users.index')" :active="route().current('users.index')">
                                     Users
                                 </JetNavLink>

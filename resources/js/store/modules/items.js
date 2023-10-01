@@ -1,6 +1,6 @@
 const state = {
     items: {},
-    is_admin: null,
+    is_admin: '',
 };
 
 const mutations = {
