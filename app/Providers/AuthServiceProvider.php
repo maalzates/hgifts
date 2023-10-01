@@ -25,6 +25,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        // This checks if the user has the "Admin" role. 
         Gate::define('admin', function ($user){
             $user_pivot = $user->roles()->pluck('role_id')->toArray();
             if (in_array('1', $user_pivot)){
@@ -32,5 +33,8 @@ class AuthServiceProvider extends ServiceProvider
             }
             return false;
         });
+
+        // This prevent access for regular users to routes which they have no access. Example. campaign show that is not active or subscribed. 
+        Gate::resource('campaigns', CampaignPolicy::class);
     }
 }

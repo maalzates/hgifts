@@ -121,7 +121,7 @@
                                 <i class="fas fa-regular fa-pen-to-square"></i>
                             </Link>
                             <Link :href="route('campaigns.show', campaign)" class="text-indigo-600 hover:text-indigo-900">
-                                <i class="fas fa-chevron-right"></i>
+                                <i class="fa-solid fa-eye fa-lg"></i>
                             </Link>
                         </td>
                     </tr>
@@ -239,7 +239,7 @@
                         </td>
                         <td  class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 underline">
                             <Link :href="route('campaigns.show', campaign)" class="text-indigo-600 hover:text-indigo-900">
-                                <i class="fas fa-chevron-right"></i>
+                                <i class="fa-solid fa-eye fa-lg"></i>
                             </Link>
                         </td>
                     </tr>
@@ -356,7 +356,7 @@
                         </td>
                         <td  class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 underline">
                             <Link :href="route('campaigns.show', campaign)" class="text-indigo-600 hover:text-indigo-900">
-                                <i class="fas fa-chevron-right"></i>
+                                <i class="fa-solid fa-eye fa-lg"></i>
                             </Link>
                         </td>
                     </tr>
@@ -473,7 +473,7 @@
                         </td>
                         <td  class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 underline">
                             <Link :href="route('campaigns.show', campaign)" class="text-indigo-600 hover:text-indigo-900">
-                                <i class="fas fa-chevron-right"></i>
+                                <i class="fa-solid fa-eye fa-lg"></i>
                             </Link>
                         </td>
                     </tr>

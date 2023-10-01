@@ -4,7 +4,9 @@ namespace App\Policies;
 
 use App\Models\Campaign;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Auth\Access\HandlesAuthorization;
+
 
 class CampaignPolicy
 {
@@ -30,7 +32,22 @@ class CampaignPolicy
      */
     public function view(User $user, Campaign $campaign)
     {
-        //
+        // Check if the user has the admin role
+        $isAdmin = $user->hasRole('Admin'); 
+
+        // Allow admin users unrestricted access
+        if ($isAdmin) {
+            return true;
+        }
+
+        // Check if the user is subscribed to the campaign
+        $isSubscribed = $campaign->users->contains($user);
+
+        // Check if the campaign is active
+        $isActive = $campaign->delivery_date > Carbon::today()->toDateString();
+
+        // Allow access if the user is subscribed or the campaign is active
+        return $isSubscribed || $isActive;
     }
 
     /**

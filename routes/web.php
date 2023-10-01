@@ -95,7 +95,7 @@ Route::middleware([
     // List show
     Route::get('/campaigns', [CampaignController::class, 'index'])->name('campaigns.index');
     // Show view route
-    Route::get('campaigns/{campaign}/show', [CampaignController::class, 'show'])->name('campaigns.show');
+    Route::get('campaigns/{campaign}/show', [CampaignController::class, 'show'])->name('campaigns.show')->middleware('can:view,campaign');
     // Update edited information route
     Route::put('campaigns/{campaign}', [CampaignController::class, 'update'])->name('campaigns.update');
 

@@ -101,6 +101,7 @@ class CampaignController extends Controller
     public function show(Campaign $campaign)
 
     {
+        $this->authorize('view', $campaign);
         // $current_user = Auth::user();
         // $users = $campaign->users()->get();
         // $comments = $campaign->comments()->get();

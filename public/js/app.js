@@ -27010,7 +27010,7 @@ var _hoisted_31 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
   "class": "fas fa-regular fa-pen-to-square"
 }, null, -1 /* HOISTED */);
 var _hoisted_32 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
-  "class": "fas fa-chevron-right"
+  "class": "fa-solid fa-eye fa-lg"
 }, null, -1 /* HOISTED */);
 var _hoisted_33 = {
   "class": "flex justify-center align-center"
@@ -27118,7 +27118,7 @@ var _hoisted_58 = {
   "class": "px-6 py-4 whitespace-nowrap text-sm text-gray-500 underline"
 };
 var _hoisted_59 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
-  "class": "fas fa-chevron-right"
+  "class": "fa-solid fa-eye fa-lg"
 }, null, -1 /* HOISTED */);
 var _hoisted_60 = {
   "class": "flex justify-center align-center"
@@ -27229,7 +27229,7 @@ var _hoisted_86 = {
   "class": "px-6 py-4 whitespace-nowrap text-sm text-gray-500 underline"
 };
 var _hoisted_87 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
-  "class": "fas fa-chevron-right"
+  "class": "fa-solid fa-eye fa-lg"
 }, null, -1 /* HOISTED */);
 var _hoisted_88 = {
   "class": "flex justify-center align-center"
@@ -27340,7 +27340,7 @@ var _hoisted_114 = {
   "class": "px-6 py-4 whitespace-nowrap text-sm text-gray-500 underline"
 };
 var _hoisted_115 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
-  "class": "fas fa-chevron-right"
+  "class": "fa-solid fa-eye fa-lg"
 }, null, -1 /* HOISTED */);
 var _hoisted_116 = {
   "class": "flex justify-center align-center"
