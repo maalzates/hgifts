@@ -600,6 +600,8 @@ export default {
                 // SUSCRIPTION LOGICAL
                 uids.push(this.current_user.id); // Attach the curent user id, to the uids array
 
+                console.log(uids);
+
                 this.form.users = uids; // Attach the uids of the filtered users to the form data.
                 // this.$inertia.put(this.route('campaigns.update', campaign), this.form);
                 this.subscribeAction(this.form).then( () => {

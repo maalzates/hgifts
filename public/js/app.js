@@ -21725,6 +21725,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         // SUSCRIPTION LOGICAL
         uids.push(this.current_user.id); // Attach the curent user id, to the uids array
 
+        console.log(uids);
         this.form.users = uids; // Attach the uids of the filtered users to the form data.
         // this.$inertia.put(this.route('campaigns.update', campaign), this.form);
         this.subscribeAction(this.form).then(function () {
@@ -31166,7 +31167,7 @@ var actions = {
             case 0:
               commit = _ref4.commit;
               _context4.next = 3;
-              return axios.post("/campaigns/".concat(campaign.id), _objectSpread(_objectSpread({}, campaign), {}, {
+              return axios.post("api/campaigns/".concat(campaign.id), _objectSpread(_objectSpread({}, campaign), {}, {
                 _method: 'PUT'
               })).then(function (response) {
                 console.log(response);

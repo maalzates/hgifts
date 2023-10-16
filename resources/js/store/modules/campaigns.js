@@ -96,7 +96,7 @@ const actions = {
 
   // USER SUBSCRIPTION FROM CAMPAIGN
   async subscribeAction({commit}, campaign) {
-    await axios.post(`/campaigns/${campaign.id}`, {
+    await axios.post(`api/campaigns/${campaign.id}`, {
         ...campaign,
         _method: 'PUT',    
     })
