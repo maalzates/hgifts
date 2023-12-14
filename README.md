@@ -1,7 +1,9 @@
 ## Project Documentation for hGifts
 ### Overview
-The hGifts project is a web application that allows users to create and manage their own gift lists. It is built using the Vue.js framework and utilizes the Vuex state management pattern for managing the application's state. This documentation aims to provide an overview of the project structure, installation process, and key features.
-This is built using Laravel 8 for the backend and vue.js options  API for the front-end. Native or modified native components can have composition API too. 
+The hGifts project is a web application that allows your company, to manage the logistic of your employee's gift campaigns. It is built using the Vue.js framework and utilizes the Vuex state management pattern for managing the application's state. This documentation aims to provide an overview of the project structure, installation process, and key features.
+This is built using Laravel 8 for the backend and vue.js options  API for the front end. Native or modified native components can have composition API too. 
+
+The name  hGifts comes as a project built for Hostinger as a development task. 
 
 ### Installation
 To set up the hGifts project locally, follow the steps below:
