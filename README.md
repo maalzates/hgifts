@@ -33,7 +33,7 @@ The project structure follows a standard Vue.js application structure. Here is a
   - `router`: Contains the Vue Router configuration for defining application routes.
   - `store`: Contains the Vuex store configuration and modules for managing application state.
   - `views`: Contains the main views of the application, each representing a separate page.
-  - `App.vue`: The main Vue component serving as the entry point of the application.
+  - `App.vue`: The main Vue component serves as the entry point of the application.
   - `main.js`: The JavaScript file that initializes and mounts the Vue application.
 ### Vuex Implementation
 Vuex is used in the hGifts project to manage the application's state and enable efficient communication between components. The Vuex implementation consists of the following key elements:
@@ -43,10 +43,14 @@ Vuex is used in the hGifts project to manage the application's state and enable 
 - **Getters**: Getters are used to derive computed properties from the state. They are similar to computed properties in Vue components and can be accessed using `this.$store.getters`.
 ### Key Features
 The hGifts application offers several key features to manage gift lists. Here are some of the main features:
-- **User Authentication**: Users can sign up and log in to the application to create and manage their gift lists. The authentication functionality is implemented using Firebase authentication.
-- **Gift Creation and Management**: Users can add new gifts to their lists, edit existing gifts, and mark gifts as purchased. The gift data is stored in the Vuex store and updated in real-time.
-- **Roles and Permissions**: There are mainly 2 roles. The admin role and the normal user role. Normal user role can view the campaigns where he's subscribed, or that are currently active (have not been deilvered yet). Admin role, can see all campaigns, add and delete roles from users,  remove and add items. 
-- **Comment and Rating**: Each User can comment and rate the campaign where he's been linked to. Providing valuable feedback for future campaigns. 
-- **Courier information**: This app also includes a PDF download button, which provides with a list of users and addresses that are subscribed to certain campagin. Therefore, they can use it for 
+- **User Authentication**: Users can sign up and log in to the application to manage their gift campaign subscriptions. The authentication functionality is implemented using Laravel Sanctrum authentication. 
+- **Gift Creation and Management**: Users can subscribe or unsubscribe to campaign lists. Admin roles can edit, create or modify all related, which includes, gift box content, and subscribed users for each campaign, and create modify, or delete new items. The gift data is stored in the Vuex store and updated in real-time.
+- **Roles and Permissions**: The roles are implemented using the laravel package Spatie. There are mainly 2 roles. The admin role and the normal user role. Normal user role can view the campaigns where he's subscribed, or that are currently active (have not been delivered yet). Admin role, can see all campaigns, add and delete roles from users,  and remove and add items. 
+- **Comment and Rating**: Each User can comment and rate the campaign to which he's been linked. Providing valuable feedback for future campaigns. 
+- **Courier information**: This app also includes a PDF download button, which provides a list of users and addresses that are subscribed to certain campaign. Therefore, they can use it for delivering gifts to each employee.
+
+### Styling
+The styles are built using the native template of Laravel jetstream and customized using Tailwind resulting in a smooth and beautiful interface. 
+
 ## Conclusion
 This documentation provides an overview of the hGifts project, including installation instructions, project structure, Vuex implementation, and key features. By following the provided steps, users can set up the project locally and start exploring its functionality.
