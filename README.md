@@ -25,16 +25,11 @@ To set up the hGifts project locally, follow the steps below:
    ```
 5. Access the application in your browser at `http://localhost:8080`.
 ### Project Structure
-The project follows the MVC architecture pattern. Is build with Laravel for the backend, and vue.js for the front-end. This is a full-stack web application. 
-The project structure follows a standard Vue.js application structure. Here is an overview of the key directories and files:
-- `src`: Contains the main source code of the application.
-  - `assets`: Contains static assets such as images and CSS files.
-  - `components`: Contains Vue components used throughout the application.
-  - `router`: Contains the Vue Router configuration for defining application routes.
-  - `store`: Contains the Vuex store configuration and modules for managing application state.
-  - `views`: Contains the main views of the application, each representing a separate page.
-  - `App.vue`: The main Vue component serves as the entry point of the application.
-  - `main.js`: The JavaScript file that initializes and mounts the Vue application.
+The project follows the MVC architecture pattern. Is built with Laravel for the backend, and vue.js for the front-end. This is a full-stack web application. 
+The project structure follows a standard Laravel application file structure. 
+Routing is made using Laravel routes/web.php and routes/api.php 
+Also, for SPA we used native Laravel inertia components such as the <Link/> component. 
+
 ### Vuex Implementation
 Vuex is used in the hGifts project to manage the application's state and enable efficient communication between components. The Vuex implementation consists of the following key elements:
 - **State**: The application's state is stored in a central store object. It includes properties such as `user` for storing user information and `gifts` for managing gift data.
