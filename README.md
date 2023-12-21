@@ -28,7 +28,7 @@ To set up the hGifts project locally, follow the steps below:
 The project follows the MVC architecture pattern. Is built with Laravel for the backend, and vue.js for the front-end. This is a full-stack web application. 
 The project structure follows a standard Laravel application file structure. 
 Routing is made using Laravel routes/web.php and routes/api.php 
-Also, for SPA we used native Laravel inertia components such as the <Link/> component. 
+Also, for SPA we used native Laravel inertia components such as the Link component. 
 
 ### Vuex Implementation
 Vuex is used in the hGifts project to manage the application's state and enable efficient communication between components. The Vuex implementation consists of the following key elements:
