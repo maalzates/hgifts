@@ -48,7 +48,6 @@ Route::get('/campaigns', function () {
             });
         })->paginate(8);
 
-        
     $active_or_subscribed_campaigns =  Campaign::with('items', 'users')->whereHas('users', function($users) {
             $users->where(function($query) {
                 $query->whereName(Auth::user()->name);
@@ -73,7 +72,6 @@ Route::get('/campaigns/{campaign}/show', function(Campaign $campaign){
 
     $current_user = Auth::user();
     $users = $campaign->users()->get();
-    // $comments = $campaign->comments()->get();
     $comments = $campaign->comments()->latest('id')->get();
 
     // Adding user property to each comment. This will help us in the view to render the propper information.
@@ -151,7 +149,6 @@ Route::put('/campaigns/{campaign}', function(Request $request, Campaign $campaig
     if ($request['is_rating']) {
         
         $campaign->users()->syncWithoutDetaching([$request['user'] => ['score' => $request['score']]]);
-        // return redirect()->back()->with('success', 'Model updated successfully!');
         return response()->json([
             'message' => 'Rating updated successfully'
         ]);
@@ -185,7 +182,6 @@ Route::put('/campaigns/{campaign}', function(Request $request, Campaign $campaig
 
 
         return redirect()->route('campaigns.index');
-        // return redirect()->back()->with('success', 'Updated successfully');
     }
     return $campaign;
 });
@@ -223,15 +219,12 @@ Route::put('items/{item}', function(Request $request, Item $item){
 // DELETE ITEM
 Route::delete('items/{item}', function( Item $item){
     $item->delete();
-    // return redirect()->route('items.index');
-    // return redirect()->route('items.index');
 });
 
 // USERS -----------------
 
 // GET USERS
 Route::get('/users', function(){
-    // Getting users results excluding admin
     $users = User::where('name', '!=' , 'Manuel Alzate')->paginate(8);
     $is_admin = Gate::allows('admin');
     return response()->json([
@@ -242,7 +235,6 @@ Route::get('/users', function(){
 
 // UPDATE USER ROLES
 Route::put('/users/{user}', function(Request $request, User $user){
-    // return $request->roles;
     $user->roles()->sync($request->roles);
 
     return $user;

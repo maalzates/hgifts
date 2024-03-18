@@ -1,7 +1,7 @@
 <template>
   <app-layout  :is_admin="this.is_admin">
     <template #header>
-      <h2 class="flex font-semibold text-xl text-gray-800 leading-tight"> Crear Nuevo Item {{this.is_admin}}</h2>
+      <h2 class="flex font-semibold text-xl text-gray-800 leading-tight"> Crear Nuevo Item</h2>
     </template>
     <!-- Create form -->
     <div class="bg-white px-6 py-8 rounded-lg shadow">
@@ -36,13 +36,16 @@
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import Input from "../../Jetstream/Input.vue";
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import {isAnyFieldEmpty, emptyError, itemCreated} from '../Helpers/Items.js'
 
 export default {
   components: {
     AppLayout,
     Input
+  },
+  props: {
+    is_admin: Boolean
   },
   data(){
     return{
@@ -60,15 +63,11 @@ export default {
         emptyError(this.$swal);
       } else {
         this.storeItem(item).then( () => {
-          console.log('created');
           itemCreated(this.$swal);
         });
       }
     }
   },
-  computed: {
-    
-  }
 }
 </script>
 

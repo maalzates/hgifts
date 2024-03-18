@@ -56,123 +56,141 @@ const mutations = {
 const actions = {
 
   // GET CURRENT USER INFORMATION
-  async fetchUser ({ commit }) {
+  async fetchUser({ commit }) {
     try {
-      const response = await axios.get('/api/user')
-      const user = response.data
-      commit('SET_USER', user)
+      const response = await axios.get('/api/user');
+      const user = response.data;
+      commit('SET_USER', user);
     } catch (error) {
-      console.log(error)
+      console.error('Error fetching user information:', error);
+      throw error; // Rethrow the error for handling in components
     }
-    
   },
 
   // GET CURRENT CAMPAIGNS INFORMATION
   async fetchCampaigns({ commit }, page = 1) {
-    // const campaigns = await axios.get("api/campaigns?with[]=items&with[]=users");
-    const response = await axios.get(`api/campaigns?page=${page}`);
-
-    commit("SET_ALL_CAMPAIGNS", response.data.campaigns);
-    commit("SET_ACTIVE_CAMPAIGNS", response.data.active_campaigns);
-    commit("SET_SUBSCRIBED_CAMPAIGNS", response.data.subscribed_campaigns);
-    commit("SET_ACTIVE_OR_SUBSCRIBED_CAMPAIGNS", response.data.active_or_subscribed_campaigns);
-    commit("SET_IS_ADMIN", response.data.is_admin);
+    try {
+      const response = await axios.get(`api/campaigns?page=${page}`);
+      commit("SET_ALL_CAMPAIGNS", response.data.campaigns);
+      commit("SET_ACTIVE_CAMPAIGNS", response.data.active_campaigns);
+      commit("SET_SUBSCRIBED_CAMPAIGNS", response.data.subscribed_campaigns);
+      commit("SET_ACTIVE_OR_SUBSCRIBED_CAMPAIGNS", response.data.active_or_subscribed_campaigns);
+      commit("SET_IS_ADMIN", response.data.is_admin);
+    } catch (error) {
+      console.error('Error fetching campaigns information:', error);
+      throw error; // Rethrow the error for handling in components
+    }
   },
 
   // USER UNSUSCRIPTION FROM CAMPAIGN
-  async unsubscribeAction({commit}, campaign) {
-    const response = await axios.post(`api/campaigns/${campaign.id}`, {
-        ...campaign,
-        _method: 'PUT',    
-    })
-    .then((response) => {
+  async unsubscribeAction({ commit }, campaign) {
+    try {
+        const response = await axios.post(`api/campaigns/${campaign.id}`, {
+            ...campaign,
+            _method: 'PUT',    
+        });
         console.log(response);
-    })
-    .catch(error => {
+    } catch (error) {
         console.log(error);
-    });
-
+    }
   },
 
-  // USER SUBSCRIPTION FROM CAMPAIGN
-  async subscribeAction({commit}, campaign) {
-    await axios.post(`api/campaigns/${campaign.id}`, {
+  // USER UNSUBSCRIPTION FROM CAMPAIGN
+  async unsubscribeAction({ commit }, campaign) {
+    try {
+      const response = await axios.post(`api/campaigns/${campaign.id}`, {
         ...campaign,
-        _method: 'PUT',    
-    })
-    .then((response) => {
-        console.log(response);
-    })
-    .catch(error => {
-        console.log(error);
-    });
+        _method: 'PUT',
+      });
+      console.log(response);
+    } catch (error) {
+      console.error('Error unsubscribing from campaign:', error);
+      throw error; // Rethrow the error for handling in components
+    }
+  },
+
+  // USER SUBSCRIPTION TO CAMPAIGN
+  async subscribeAction({ commit }, campaign) {
+    try {
+      const response = await axios.post(`api/campaigns/${campaign.id}`, {
+        ...campaign,
+        _method: 'PUT',
+      });
+      console.log(response);
+    } catch (error) {
+      console.error('Error subscribing to campaign:', error);
+      throw error; // Rethrow the error for handling in components
+    }
   },
 
   // STORE CAMPAIGN
-  async storeCampaign( {commit}, campaign) {
-    await  axios.post('/api/campaigns', campaign, {
-      headers: {'Content-Type': 'application/json'}
-    })
-      .then(res => {
-          console.log(res.data);
-          // window.location.href = '/campaigns/' + res.data.id + '/edit';
-      })
-      .catch(err => {
-          console.error(err); 
-      })
-
-    // console.log(campaign);
+  async storeCampaign({ commit }, campaign) {
+    try {
+      const response = await axios.post('/api/campaigns', campaign, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      console.log(response);
+      // window.location.href = '/campaigns/' + response.data.id + '/edit';
+      window.location.href = '/campaigns/';
+    } catch (error) {
+      console.error('Error storing campaign:', error);
+      throw error; // Rethrow the error for handling in components
+    }
   },
 
-  // UPDATE  CAMPAIGN
-  async updateCampaign({commit}, {current_campaign, updated_campaign}) {
-
-    await axios.post(`/api/campaigns/${current_campaign.id}`, {
-      ...updated_campaign,
-      _method: 'PUT',
-    }, {
-      headers: { 'Content-Type': 'application/json' }
-    })
-    .then((response) => {
-        console.log(response);
-    })
-    .catch(error => {
-        console.log(error);
-    });
+  // UPDATE CAMPAIGN
+  async updateCampaign({ commit }, { current_campaign, updated_campaign }) {
+    try {
+      const response = await axios.post(
+        `/api/campaigns/${current_campaign.id}`,
+        {
+          ...updated_campaign,
+          _method: 'PUT',
+        },
+        {
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.error('Error updating campaign:', error);
+      throw error; // Rethrow the error for handling in components
+    }
   },
 
   // DELETE CAMPAIGN
-  async deleteCampaign({commit}, campaign){
-    axios.post(`/api/campaigns/${campaign.id}`, {
+  async deleteCampaign({ commit }, campaign) {
+    try {
+      const response = await axios.post(`/api/campaigns/${campaign.id}`, {
         ...campaign,
-        _method: 'DELETE',    
-    })
-    .then(response => {
-      // window.location.href = this.route('campaigns.index');
+        _method: 'DELETE',
+      });
       console.log(response);
-    })
-    .catch(error => {
-      console.log(error);
-    });
+      // window.location.href = this.route('campaigns.index');
+    } catch (error) {
+      console.error('Error deleting campaign:', error);
+      throw error; // Rethrow the error for handling in components
+    }
   },
 
   // FETCH CAMPAIGN SHOW VIEW INFO
-  async fetchCampaignShowInfo({commit}, campaign) {
+  async fetchCampaignShowInfo({ commit }, campaign) {
     try {
-      const  response = await axios.get(`/api/campaigns/${campaign.id}/show`);
+      const response = await axios.get(`/api/campaigns/${campaign.id}/show`);
       commit('SET_USERS', response.data.users);
       commit('SET_COMMENTS', response.data.comments);
       commit('SET_SCORES', response.data.scores);
       commit('SET_AVERAGE', response.data.average);
       commit('SET_HAS_RATED', response.data.has_rated);
       commit('SET_CURRENT_USER', response.data.current_user);
-      commit('SET_IS_ADMIN', response.data.is_admin );
+      commit('SET_IS_ADMIN', response.data.is_admin);
       console.log('response:', response.data.comments);
-
     } catch (error) {
-      console.log(error);
+      console.error('Error fetching campaign info:', error);
+      throw error; // Rethrow the error for handling in components
     }
   }
+
 };
   
 const getters = {

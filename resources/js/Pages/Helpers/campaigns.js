@@ -37,7 +37,7 @@ export const isCommentEmpty = (comment) => {
 export const repeatedError = (Swal) => {
     Swal.fire({
         icon: 'error',
-        title: 'Add Items Error',
+        title: 'Repeated Item Found',
         text: 'Avoid selecting a repeated item, if you need more of one item, please increase the AMOUNT field.'
     })
 };
@@ -46,7 +46,7 @@ export const emptyError = (Swal) => {
     Swal.fire({
         icon: 'error',
         title: 'Add Items Error',
-        text: 'Please make sure ITEM and COUNT fields are filled for all items.'
+        text: 'Please make sure ITEM and COUNT fields are filled for ALL items.'
     })
 };
 
@@ -56,6 +56,14 @@ export const fieldsEmptyError = (Swal) => {
         title: 'Empty fields Errorr',
         text: 'All fileds are required, please fill them all'
     })
+};
+
+export const campaignCreated = (Swal) => { 
+    Swal.fire({
+        icon: 'success',
+        title: 'Campaign was created',
+        text: 'The campaign has been successfully created',
+    });
 };
 
 export const campaignUpdatedPopup = (Swal) => { 

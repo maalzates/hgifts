@@ -93,11 +93,11 @@
 
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import Input from "../../Jetstream/Input.vue";
+import Input from "@/Jetstream/Input.vue";
 import AddItemModal from '@/Jetstream/AddItemModal.vue';
-import axios from 'axios';
 import VueMultiselect from 'vue-multiselect'
 import { mapActions } from 'vuex';
+import { emptyError, repeatedError, campaignCreated } from '../Helpers/campaigns.js';
 
 
 
@@ -147,7 +147,6 @@ export default {
             // Checking if the items selected are repeated
             let items_array = [...this.form.items].map( (item) => item.id);
             let repeated_items = items_array.some( (item, index) => items_array.indexOf(item) != index);
-            console.log(repeated_items);
             return repeated_items;
         },
         isNameOrAmountEmpty(){
@@ -157,31 +156,19 @@ export default {
             console.log(validation);
             return validation;
         },
-        repeatedError(){
-            this.$swal.fire({
-                icon: 'error',
-                title: 'Add Items Error',
-                text: 'Avoid selecting a repeated item, if you need more of one item, please increase the AMOUNT field.'
-            })
-        },
-        emptyError(){
-            this.$swal.fire({
-                icon: 'error',
-                title: 'Add Items Error',
-                text: 'Please make sure ITEM and COUNT fields are filled for all items.'
-            })
-        },
         store(){
             // Filtering array of users by id, and attaching to form.
             let uids = this.selected_users.map((user) => user.id);
             this.form.users = uids;
 
             if (this.isDuplicated()) {
-                this.repeatedError();
+                repeatedError(this.$swal);
             } else if (this.isNameOrAmountEmpty()) {
-                this.emptyError();
+                emptyError(this.$swal);
             } else {
-                this.storeCampaign(this.form)
+                this.storeCampaign(this.form).then(() => {
+                    campaignCreated(this.$swal);
+                })
             }
         }
     }

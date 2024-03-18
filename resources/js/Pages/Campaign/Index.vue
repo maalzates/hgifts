@@ -1,16 +1,16 @@
 <template>
-  <app-layout :is_admin="this.is_admin">
+  <app-layout :is_admin="is_admin">
     <template #header>
         <div class="flex justify-between">
             <h2 class="flex font-semibold text-xl text-gray-800 leading-tight">
-            Campaigns 
+            Campaigns
             </h2>
             <div class="flex flex-col">
                 <Link  :href="route('campaigns.create')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" v-if="this.is_admin"> Create New</Link>
             </div>
         </div>
-        <div v-if="!this.is_admin" class="mt-2" ><span class="font-bold mr-2 ">Filters</span>
-         <!-- <button @click="today()" class="btn mr-2 bg-blue-500"> All</button> -->
+        <div v-if="!is_admin" class="mt-2" ><span class="font-bold mr-2 ">Filters</span>
+        
         <button @click="filterActiveOrSubscribedCampaigns()" class="text-white bg-purple-700 hover:bg-purple-800  font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800" :class="{ 'ring-4 ring-purple-300': active_or_subscribed_filter }" > All</button>
         <button @click="filterActiveCampaigns()" class="text-white bg-purple-700 hover:bg-purple-800  font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800" :class="{ 'ring-4 ring-purple-300': active_filter }"> Active </button>
         <button @click="filterSubscribedCampaigns()" class="text-white bg-purple-700 hover:bg-purple-800  font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800" :class="{ 'ring-4 ring-purple-300': subscribed_filter }"> Subscribed</button>
@@ -113,8 +113,8 @@
                             </UsersModal>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 underline">
-                            <button @click="handleSubscription(campaign)" v-if="isSubscribed(campaign)"> Unsuscribe</button>
-                            <button @click="handleSubscription(campaign)" v-else >Suscribe</button>
+                            <button @click="handleSubscription(campaign)" v-if="isSubscribed(campaign)" class="underline font-bold"> Unsuscribe</button>
+                            <button @click="handleSubscription(campaign)" v-else class="underline font-bold" >Suscribe</button>
                         </td>
                         <td  class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 underline">
                             <Link :href="route('campaigns.edit', campaign)" class="text-indigo-600 hover:text-indigo-900 mr-5 ml-1.5">
@@ -515,8 +515,7 @@ export default {
         }
     },
     computed: {
-        ...mapState("campaigns", ["all_campaigns",'active_campaigns', 'subscribed_campaigns', 'active_or_subscribed_campaigns','is_admin' ,"current_user", "variable"])
-        // ...mapGetters('campaigns', ['active_campaigns', 'subscribed_campaigns', 'subscribed_or_active_campaigns'])
+        ...mapState("campaigns", ["all_campaigns",'active_campaigns', 'subscribed_campaigns', 'active_or_subscribed_campaigns','is_admin' ,"current_user"])
     },
     created(){
         this.fetchUser(),      

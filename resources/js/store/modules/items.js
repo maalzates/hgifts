@@ -13,50 +13,53 @@ const mutations = {
 };
 
 const actions = {
-    async fetchItems({commit}, page = 1) {
-        const response = await axios.get(`api/items?page=${page}`);
-        console.log(response);
-        commit("SET_ITEMS", response.data.items);
-        commit("SET_IS_ADMIN", response.data.is_admin);
+    async fetchItems({ commit }, page = 1) {
+        try {
+            const response = await axios.get(`api/items?page=${page}`);
+            console.error("I'm fetching items" );
+            commit("SET_ITEMS", response.data.items);
+            commit("SET_IS_ADMIN", response.data.is_admin);
+            return response.data; // Return the entire response for further processing if needed
+        } catch (error) {
+            console.error("Error fetching items:", error);
+            throw error; // Rethrow the error to handle it in the component or other Vuex actions
+        }
     },
 
-    async storeItem({commit}, item) {
-        const res = axios.post('/api/items',item)
-            .then(response => {
-                // console.log(responseponse);
-                return response
-            })
-            .catch(err => {
-                return err
-            })
+    async storeItem({ commit }, item) {
+        try {
+            const response = await axios.post('/api/items', item);
+            return response.data; // Return the data from the response
+        } catch (error) {
+            console.error("Error storing item:", error);
+            throw error; // Rethrow the error to handle it in the component or other Vuex actions
+        }
     },
 
-    async updateItem({commit}, item) {
-        const res = await axios.post(`/api/items/${item.id}`, {
+    async updateItem({ commit }, item) {
+        try {
+            const response = await axios.post(`/api/items/${item.id}`, {
                 ...item,
-                _method: 'PUT',    
-            })
-            .then((response) => {
-                // window.location.href = this.route('items.index');
-                console.log(response);
-            })
-            .catch(error => {
-                console.log(error);
+                _method: 'PUT',
             });
+            return response.data; // Return the data from the response
+        } catch (error) {
+            console.error("Error updating item:", error);
+            throw error; // Rethrow the error to handle it in the component or other Vuex actions
+        }
     },
-    
-    async deleteItem({commit}, item ){
-        const res = await axios.post(`/api/items/${item.id}`, {
+
+    async deleteItem({ commit }, item) {
+        try {
+            const response = await axios.post(`/api/items/${item.id}`, {
                 item,
-                _method: 'DELETE',    
-            })
-        .then(response => {
-            // window.location.href = this.route('items.index');
-            console.log(response);
-        })
-        .catch(error => {
-            console.log(error);
-        });
+                _method: 'DELETE',
+            });
+            return response.data; // Return the data from the response
+        } catch (error) {
+            console.error("Error deleting item:", error);
+            throw error; // Rethrow the error to handle it in the component or other Vuex actions
+        }
     }
 };
 

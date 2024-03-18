@@ -4,12 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Campaign;
 use Illuminate\Http\Request;
-use App\Http\Requests\UpdateCampaignRequest;
-use App\Models\Comment;
 use App\Models\Item;
 use App\Models\User;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
