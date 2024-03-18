@@ -52,7 +52,8 @@ export default {
         item: {
             type: Object,
             required: true,
-        }
+        },
+        is_admin : Boolean,
     },
     data(){
         return {

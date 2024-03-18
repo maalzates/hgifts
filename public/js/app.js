@@ -21988,7 +21988,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     item: {
       type: Object,
       required: true
-    }
+    },
+    is_admin: Boolean
   },
   data: function data() {
     return {
