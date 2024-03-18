@@ -1,64 +1,51 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+## Project Documentation for hGifts
+### Overview
+The hGifts project is a web application that allows your company, to manage the logistic of your employee's gift campaigns. It is built using the Vue.js framework and utilizes the Vuex state management pattern for managing the application's state. This documentation aims to provide an overview of the project structure, installation process, and key features.
+This is built using Laravel 8 for the backend and vue.js options  API for the front end. Native or modified native components can have composition API too. 
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+The name  hGifts comes as a project built for Hostinger as a development task. 
 
-## About Laravel
+### Installation
+To set up the hGifts project locally, follow the steps below:
+1. Clone the repository from GitHub using the following command:
+   ```
+   git clone https://github.com/maalzates/hgifts.git
+   ```
+2. Navigate to the project directory:
+   ```
+   cd hgifts
+   ```
+3. Install the project dependencies:
+   ```
+   npm install
+   ```
+4. Run the development server:
+   ```
+   npm run serve
+   ```
+5. Access the application in your browser at `http://localhost:8080`.
+### Project Structure
+The project follows the MVC architecture pattern. Is built with Laravel for the backend, and vue.js for the front-end. This is a full-stack web application. 
+The project structure follows a standard Laravel application file structure. 
+Routing is made using Laravel routes/web.php and routes/api.php 
+Also, for SPA we used native Laravel inertia components such as the Link component. 
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Vuex Implementation
+Vuex is used in the hGifts project to manage the application's state and enable efficient communication between components. The Vuex implementation consists of the following key elements:
+- **State**: The application's state is stored in a central store object. It includes properties such as `user` for storing user information and `gifts` for managing gift data.
+- **Mutations**: Mutations are responsible for modifying the state. They are synchronous functions that receive the current state and payload as arguments and make changes to the state as needed.
+- **Actions**: Actions are used to perform asynchronous operations and commit mutations. They can dispatch multiple mutations or actions to update the state and handle side effects.
+- **Getters**: Getters are used to derive computed properties from the state. They are similar to computed properties in Vue components and can be accessed using `this.$store.getters`.
+### Key Features
+The hGifts application offers several key features to manage gift lists. Here are some of the main features:
+- **User Authentication**: Users can sign up and log in to the application to manage their gift campaign subscriptions. The authentication functionality is implemented using Laravel Sanctrum authentication. 
+- **Gift Creation and Management**: Users can subscribe or unsubscribe to campaign lists. Admin roles can edit, create or modify all related, which includes, gift box content, and subscribed users for each campaign, and create modify, or delete new items. The gift data is stored in the Vuex store and updated in real-time.
+- **Roles and Permissions**: The roles are implemented using the laravel package Spatie. There are mainly 2 roles. The admin role and the normal user role. Normal user role can view the campaigns where he's subscribed, or that are currently active (have not been delivered yet). Admin role, can see all campaigns, add and delete roles from users,  and remove and add items. 
+- **Comment and Rating**: Each User can comment and rate the campaign to which he's been linked. Providing valuable feedback for future campaigns. 
+- **Courier information**: This app also includes a PDF download button, which provides a list of users and addresses that are subscribed to certain campaign. Therefore, they can use it for delivering gifts to each employee.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Styling
+The styles are built using the native template of Laravel jetstream and customized using Tailwind resulting in a smooth and beautiful interface. 
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Conclusion
+This documentation provides an overview of the hGifts project, including installation instructions, project structure, Vuex implementation, and key features. By following the provided steps, users can set up the project locally and start exploring its functionality.
