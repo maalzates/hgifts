@@ -16,7 +16,6 @@ const actions = {
     async fetchItems({ commit }, page = 1) {
         try {
             const response = await axios.get(`api/items?page=${page}`);
-            console.error("I'm fetching items" );
             commit("SET_ITEMS", response.data.items);
             commit("SET_IS_ADMIN", response.data.is_admin);
             return response.data; // Return the entire response for further processing if needed

@@ -27,7 +27,6 @@ export const isNameOrAmountEmpty = (form_items) =>{
     // Check if some of  the selected items is empty
     let items_array = [...form_items];
     let validation = items_array.some((item) => Object.values(item).some( value => value === "" ));
-    console.log(items_array);
     return validation;
 };
 

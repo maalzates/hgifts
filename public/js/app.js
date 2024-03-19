@@ -21112,15 +21112,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   },
   data: function data() {
+    var _form;
     return {
-      form: {
+      form: (_form = {
         name: '',
         status: [],
         items: [],
-        dispatch_day: '',
-        delivery_day: '',
-        users: []
-      },
+        dispatch_date: ''
+      }, _defineProperty(_form, "dispatch_date", ''), _defineProperty(_form, "users", []), _form),
       selected_users: [],
       options: this.users
     };
@@ -21228,7 +21227,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     users: {
       type: Object
     },
-    // Only users which are subscribed to this campaign, this will help us to render in the edit view, the input with the already suscribed users selected. 
+    // Only users which are subscribed to this campaign, this will help us to render in the edit view, the input with the already suscribed users selected.
     users_subscribed: {
       type: Object
     },
@@ -21259,8 +21258,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this = this;
       var uids = this.selected_users.map(function (user) {
         return user.id;
-      }); // Get all user ids of the curren editing campaign
-      this.form.users = uids; // Attaching user id's to the form that will be send in the request. 
+      }); // Get all user ids of the current editing campaign
+      this.form.users = uids; // Attaching user id's to the form that will be send in the request.
 
       if ((0,_Helpers_campaigns_js__WEBPACK_IMPORTED_MODULE_4__.isAnyFieldEmpty)(this.form)) {
         (0,_Helpers_campaigns_js__WEBPACK_IMPORTED_MODULE_4__.fieldsEmptyError)(this.$swal);
@@ -25332,16 +25331,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         }),
         "class": "w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
       }, _hoisted_8, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.status]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <span>Selected: {{ form.status }}</span> ")])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Dispatch Day "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Input, {
-        modelValue: $data.form.dispatch_day,
+        modelValue: $data.form.dispatch_date,
         "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
-          return $data.form.dispatch_day = $event;
+          return $data.form.dispatch_date = $event;
         }),
         type: "date",
         "class": "w-full"
       }, null, 8 /* PROPS */, ["modelValue"])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Delivery Day "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Input, {
-        modelValue: $data.form.delivery_day,
+        modelValue: $data.form.dispatch_date,
         "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
-          return $data.form.delivery_day = $event;
+          return $data.form.dispatch_date = $event;
         }),
         type: "date",
         "class": "w-full"
@@ -27065,7 +27064,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         }),
         type: "number",
         "class": "w-full"
-      }, null, 8 /* PROPS */, ["modelValue"])])])]), !_this.is_admin ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      }, null, 8 /* PROPS */, ["modelValue"])])])]), _this.is_admin ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3 mr-3",
         onClick: _cache[3] || (_cache[3] = function ($event) {
           return $options.destroy(_this.form);
@@ -28425,7 +28424,6 @@ var isNameOrAmountEmpty = function isNameOrAmountEmpty(form_items) {
       return value === "";
     });
   });
-  console.log(items_array);
   return validation;
 };
 var isCommentEmpty = function isCommentEmpty(comment) {
@@ -28941,8 +28939,10 @@ var actions = (_actions = {
           case 9:
             _context7.prev = 9;
             _context7.t0 = _context7["catch"](2);
-            console.error('Error updating campaign:', _context7.t0);
-            throw _context7.t0;
+            console.log('Error object:', _context7.t0);
+            if (_context7.t0.response) {
+              console.log('Error response data:', _context7.t0.response.data);
+            }
           case 13:
           case "end":
             return _context7.stop();
@@ -28966,20 +28966,21 @@ var actions = (_actions = {
           case 4:
             response = _context8.sent;
             console.log(response);
+            window.location.href = '/campaigns/';
             // window.location.href = this.route('campaigns.index');
-            _context8.next = 12;
+            _context8.next = 13;
             break;
-          case 8:
-            _context8.prev = 8;
+          case 9:
+            _context8.prev = 9;
             _context8.t0 = _context8["catch"](1);
             console.error('Error deleting campaign:', _context8.t0);
             throw _context8.t0;
-          case 12:
+          case 13:
           case "end":
             return _context8.stop();
         }
       }
-    }, _callee8, null, [[1, 8]]);
+    }, _callee8, null, [[1, 9]]);
   }))();
 }), _defineProperty(_actions, "fetchCampaignShowInfo", function fetchCampaignShowInfo(_ref10, campaign) {
   return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9() {
@@ -29139,21 +29140,20 @@ var actions = {
               return axios.get("api/items?page=".concat(page));
             case 5:
               response = _context.sent;
-              console.error("I'm fetching items");
               commit("SET_ITEMS", response.data.items);
               commit("SET_IS_ADMIN", response.data.is_admin);
               return _context.abrupt("return", response.data);
-            case 12:
-              _context.prev = 12;
+            case 11:
+              _context.prev = 11;
               _context.t0 = _context["catch"](2);
               console.error("Error fetching items:", _context.t0);
               throw _context.t0;
-            case 16:
+            case 15:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 12]]);
+      }, _callee, null, [[2, 11]]);
     }))();
   },
   storeItem: function storeItem(_ref2, item) {

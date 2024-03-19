@@ -46,8 +46,8 @@
                 <template #title>
                     <h2>Items in this Campaign Box</h2>
                 </template>
-                <template #content> 
-                    <div class="flex">                           
+                <template #content>
+                    <div class="flex">
                         <button class=" mr-3 justify-end text-white-500 bg-violet-600 font-bold px-3 py-2 text-white outline-none focus:outline-none mr-1 mb-1 rounded ease-linear transition-all duration-150" @click="addItem">Add item </button>
                     </div>
                     <label>
@@ -111,7 +111,7 @@ export default {
         VueMultiselect
     },
     props: {
-        items: { 
+        items: {
           // Is the $campaign->items relationship. An array that includes the pivot key. This contains all items information.
           // This will help us to show the items information dynamically in dropdownbox list and pick up each option value as item.id.
             type: Object
@@ -127,7 +127,7 @@ export default {
         users: {
             type: Object,
         },
-        // Only users which are subscribed to this campaign, this will help us to render in the edit view, the input with the already suscribed users selected. 
+        // Only users which are subscribed to this campaign, this will help us to render in the edit view, the input with the already suscribed users selected.
         users_subscribed: {
             type: Object,
         },
@@ -147,7 +147,7 @@ export default {
     },
     methods:{
         ...mapActions('campaigns', ['updateCampaign', 'deleteCampaign']),
-        
+
         addItem(){
             this.form.items.push({item_id:'', count:''})
         },
@@ -157,8 +157,8 @@ export default {
         },
 
         update(){
-            let uids = this.selected_users.map((user) => user.id); // Get all user ids of the curren editing campaign
-            this.form.users = uids; // Attaching user id's to the form that will be send in the request. 
+            let uids = this.selected_users.map((user) => user.id); // Get all user ids of the current editing campaign
+            this.form.users = uids; // Attaching user id's to the form that will be send in the request.
 
             if(isAnyFieldEmpty(this.form)){
                 fieldsEmptyError(this.$swal);
@@ -172,16 +172,16 @@ export default {
                     current_campaign: this.campaign,
                     updated_campaign: this.form
                 };
-                this.updateCampaign(data).then( () => { 
+                this.updateCampaign(data).then( () => {
                     campaignUpdatedPopup(this.$swal);
                 })
             }
         },
 
         destroy(){
-            this.deleteCampaign(this.campaign).then( () => { 
+            this.deleteCampaign(this.campaign).then( () => {
                 campaignDeltedPopup(this.$swal);
-             });
+             })
         }
     }
 }

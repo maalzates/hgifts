@@ -153,8 +153,10 @@ const actions = {
       );
       console.log(response);
     } catch (error) {
-      console.error('Error updating campaign:', error);
-      throw error; // Rethrow the error for handling in components
+      console.log('Error object:', error);
+      if (error.response) {
+        console.log('Error response data:', error.response.data);
+      }
     }
   },
 
@@ -166,6 +168,7 @@ const actions = {
         _method: 'DELETE',
       });
       console.log(response);
+      window.location.href = '/campaigns/';
       // window.location.href = this.route('campaigns.index');
     } catch (error) {
       console.error('Error deleting campaign:', error);

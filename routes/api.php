@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 /*
@@ -117,47 +118,64 @@ Route::get('/campaigns/{campaign}/show', function(Campaign $campaign){
 
 });
 
-
-// });
 // STORE  CAMPAIGN
 Route::post('/campaigns', function (Request $request){
 
-    // dd($request->json());
+    // Validate the request data
+    $validatedData = Validator::make($request->all(), [
+        'name' => 'required|string|max:255',
+        'status' => 'required|in:preparing,ready,dispatched',
+        'dispatch_date' => 'required|date',
+        'delivery_date' => 'required|date|after_or_equal:dispatch_date',
+        'items' => 'required|array',
+        'items.*.id' => 'required|exists:items,id',
+        'items.*.count' => 'required|integer|min:1',
+        'users.*' => 'exists:users,id',
+    ])->validate();
 
-    $campaign = Campaign::create($request->input());
-    $items = collect($request->items);
-    $users = collect($request->users);
+    // Directly use the validated data to create the campaign
+    // Additional fields outside of $fillable are ignored
+    $campaign = Campaign::create($validatedData);
 
-    $campaign->users()->attach($users);
-
-
-    foreach ($items as $key => $item) {
+    // Process and attach items and users separately
+    foreach ($validatedData['items'] as $item) {
         $campaign->items()->attach($item['id'], ['count' => $item['count']]);
-    };
+    }
 
-    return $campaign;
+    if (!empty($validatedData['users'])) {
+        $campaign->users()->attach($validatedData['users']);
+    }
 
-    // return $request->json();
+    return response()->json($campaign);
+
 });
+
 // UPDATE CAMPAIGN
 Route::put('/campaigns/{campaign}', function(Request $request, Campaign $campaign) { 
 
-    $data = $request->json()->all();
-    $campaign = Campaign::find($request->id);
+     // Validate the request data and update the campaign in a single step
+     $validatedData = Validator::make($request->all(), [
+        'name' => 'required|string|max:255',
+        'status' => 'required|in:preparing,ready,dispatched',
+        'dispatch_date' => 'required|date',
+        'delivery_date' => 'required|date|after_or_equal:dispatch_date',
+        'items' => 'required|array',
+        'items.*.item_id' => 'required|exists:items,id',
+        'items.*.count' => 'required|integer|min:1',
+        'users' => 'array',
+        'users.*' => 'exists:users,id',
+    ])->validate();
 
-    // UPDATING RATING for this campaign
-    if ($request['is_rating']) {
-        
-        $campaign->users()->syncWithoutDetaching([$request['user'] => ['score' => $request['score']]]);
-        return response()->json([
-            'message' => 'Rating updated successfully'
-        ]);
+    // Update campaign with validated data
+    $campaign->update([
+        'name' => $validatedData['name'],
+        'status' => $validatedData['status'],
+        'dispatch_date' => $validatedData['dispatch_date'],
+        'delivery_date' => $validatedData['delivery_date'],
+    ]);
 
-    } else {
-        
-        $campaign = Campaign::find($request->id);
-        $campaign->update($data);
-        
+    // Process and attach items with additional attributes
+    if (!empty($validatedData['items'])) {
         // UPDATING PIVOT (campaign_item) TABLE WITH EXTRA FIELD
         // Formatting the data as we need in the sync function, array with item_id as key, and value as another array with key 'field_name' => field_value
         // $payload = [
@@ -165,26 +183,22 @@ Route::put('/campaigns/{campaign}', function(Request $request, Campaign $campaig
         //              5 => ['count' => 3],
         //              8 => ['count' => 7],
         // ];
-
-        $items = $request->items;
         $payload = [];
-        
-        foreach ($items as $item) {
+        foreach ($validatedData['items'] as $item) {
             $payload[$item['item_id']] = ['count' => $item['count']];
-        };
-        $campaign->items()->sync($payload);
-        //------------------------------
-
-        // UPDATING USERS ATTACHED TO THIS CAMPAIGN
-        $users = $request->users;
-        $campaign->users()->sync($users);
-        //-----------------
-
-
-        return redirect()->route('campaigns.index');
+        }
+        $campaign->items()->sync($payload); // Use sync to update existing relations
     }
-    return $campaign;
+
+    // Sync users if provided
+    if (!empty($validatedData['users'])) {
+        $campaign->users()->sync($validatedData['users']);
+    }
+
+    return response()->json($campaign);
+
 });
+
 // DELETE CAMPAIGN
 Route::delete('/campaigns/{campaign}', function(Campaign $campaign) {
 
@@ -205,16 +219,30 @@ Route::get('/items', function() {
 });
 // STORE ITEM
 Route::post('/items', function(Request $request) {
-    $data = $request->json()->all();
-    Item::create($data);
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255',
+        'unit_price' => 'required|numeric|min:0',
+        'units_owned' => 'required|integer|min:0',
+    ]);
 
-    return redirect()->route('items.index');
+    // Create the item with the validated data
+    $item = Item::create($validatedData);
+    
+    return response()->json($item);
 });
+
+
 // UPDATE ITEM: 
 Route::put('items/{item}', function(Request $request, Item $item){
-    $data = $request->json()->all();
 
-    $item->update($data);
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255',
+        'unit_price' => 'required|numeric|min:0',
+        'units_owned' => 'required|integer|min:0',
+    ]);
+
+    $item->update($validatedData);
+    return response()->json($item);
 });
 // DELETE ITEM
 Route::delete('items/{item}', function( Item $item){
@@ -243,8 +271,17 @@ Route::put('/users/{user}', function(Request $request, User $user){
 
 // COMMENTS -------------
 
-// POST COMMENT
+// STORE COMMENT
 Route::post('/comments', function(Request $request){
-    $new_comment = Comment::create($request->all());
-    return $new_comment;
+    $validatedData = $request->validate([
+        'campaign_id' => 'required|exists:campaigns,id',
+        'content' => 'required|string|max:255',
+        'user_id' => 'required|exists:users,id',
+    ]);
+
+    // Create the comment with the validated data
+    $new_comment = Comment::create($validatedData);
+
+    // Return the newly created comment as JSON
+    return response()->json($new_comment);
 });

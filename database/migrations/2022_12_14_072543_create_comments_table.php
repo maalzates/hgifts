@@ -17,7 +17,7 @@ class CreateCommentsTable extends Migration
             $table->id();
             $table->longText('content')->default('');
             
-            $table->foreignId('campaign_id')->constrined()->default('0');
+            $table->foreignId('campaign_id')->constrained()->default('0');
             $table->foreignId('user_id')->constrined()->default('0');
             $table->timestamps();
         });

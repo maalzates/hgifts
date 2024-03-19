@@ -27,7 +27,7 @@
                     </label>
                 </div>
             </div>
-            <div class="flex justify-end"  v-if="!this.is_admin">
+            <div class="flex justify-end"  v-if="this.is_admin">
                 <button  class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3 mr-3" @click="destroy(this.form)"> Delete </button>
                 <button  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3" @click="update(this.form)"> Update </button>
             </div>

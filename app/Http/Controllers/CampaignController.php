@@ -73,18 +73,18 @@ class CampaignController extends Controller
     public function store(Request $request)
     {   
 
-        $campaign = Campaign::create($request->json());
-        $items = collect($request->items);
-        $users = collect($request->users);
+        // $campaign = Campaign::create($request->json());
+        // $items = collect($request->items);
+        // $users = collect($request->users);
 
-        $campaign->users()->attach($users);
+        // $campaign->users()->attach($users);
 
 
-        foreach ($items as $key => $item) {
-            $campaign->items()->attach($item['id'], ['count' => $item['count']]);
-        };
+        // foreach ($items as $key => $item) {
+        //     $campaign->items()->attach($item['id'], ['count' => $item['count']]);
+        // };
 
-        return $campaign;
+        // return $campaign;
 
     }
 

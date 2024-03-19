@@ -16,9 +16,6 @@ class ItemController extends Controller
      */
     public function index()
     {
-        // $items = Item::latest('id')->paginate();
-        // $is_admin = Gate::allows('admin');
-        // return Inertia::render('Items/Index', compact('items', 'is_admin'));
         return Inertia::render('Items/Index');
     }
 

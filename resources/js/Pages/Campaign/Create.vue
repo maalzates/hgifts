@@ -29,14 +29,14 @@
             <div>
                 <label>
                     Dispatch Day
-                    <Input v-model="form.dispatch_day" type="date" class="w-full"/>
+                    <Input v-model="form.dispatch_date" type="date" class="w-full"/>
 
                 </label>
             </div>
             <div>
                 <label>
                     Delivery Day
-                    <Input v-model="form.delivery_day" type="date" class="w-full"/>
+                    <Input v-model="form.dispatch_date" type="date" class="w-full"/>
                 </label>
             </div>
                             <!-- ADD ITEMS {{form.items}} -->
@@ -127,8 +127,8 @@ export default {
                 status: [],
                 items: [
                 ],
-                dispatch_day: '',
-                delivery_day: '',
+                dispatch_date: '',
+                dispatch_date: '',
                 users:[]
             },
             selected_users: [],
