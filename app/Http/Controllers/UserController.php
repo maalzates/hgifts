@@ -18,9 +18,6 @@ class UserController extends Controller
      */
     public function index()
     {
-        // $users = User::paginate();
-        // $is_admin = Gate::allows('admin');
-        // return Inertia::render('Users/Index', compact('users', 'is_admin'));
         return Inertia::render('Users/Index');
     }
 
@@ -79,10 +76,7 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $user->roles()->sync($request->roles);
-
-        return redirect()->route('users.index', $user)->with('info', 'Se asignó los roles correctamente a este usuario');
-
+      
     }
 
     /**

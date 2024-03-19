@@ -45,17 +45,6 @@ class CommentController extends Controller
         $new_comment = Comment::create($request->all());
 
         return $new_comment;
-            // $campaign = Campaign::find($request->campaign_id);
-
-            // $comment = Comment::create([
-            //     'content' => $request->content,
-            //     'campaign_id' => $campaign->id,
-            //     'user_id' => Auth::user()->id,
-            // ]);
-            // $campaign = Campaign::find($request->campaign_id);
-            // $new_comment = $campaign->comments()->create($request->all());
-            
-
     }
 
     /**

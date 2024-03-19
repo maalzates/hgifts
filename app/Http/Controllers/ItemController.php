@@ -83,17 +83,7 @@ class ItemController extends Controller
      */
     public function update(Request $request, Item $item)
     {
-        // $data = $request->validate([
-        //     'name' => 'required',
-        //     'unit_price' => 'required',
-        //     'units_owned' => 'required'
-        // ]);
         
-        $data = $request->json()->all();
-
-        $item->update($data);
-
-        return redirect()->route('items.index', $item);
     }
 
     /**
