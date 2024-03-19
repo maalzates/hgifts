@@ -80,7 +80,7 @@
                 <!-- COMMENTs SECTION -->
                 <!-- Card -->
                 <div class="relative">
-                    <div v-for="(comment, index) in comments.slice(0, initialCommentsCount)" :key="comment.id" class="flex flex-col rounded shadow-sm bg-white overflow-hidden">
+                    <div v-for="comment in comments.slice(0, initialCommentsCount)" :key="comment.id" class="flex flex-col rounded shadow-sm bg-white overflow-hidden">
 
                     <!-- Card Body -->
                     <div class="p-5 lg:p-6 grow w-full space-y-4 border-b purple">

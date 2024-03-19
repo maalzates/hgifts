@@ -153,29 +153,30 @@ Route::post('/campaigns', function (Request $request){
 // UPDATE CAMPAIGN
 Route::put('/campaigns/{campaign}', function(Request $request, Campaign $campaign) { 
 
-     // Validate the request data and update the campaign in a single step
-     $validatedData = Validator::make($request->all(), [
-        'name' => 'required|string|max:255',
-        'status' => 'required|in:preparing,ready,dispatched',
-        'dispatch_date' => 'required|date',
-        'delivery_date' => 'required|date|after_or_equal:dispatch_date',
-        'items' => 'required|array',
-        'items.*.item_id' => 'required|exists:items,id',
-        'items.*.count' => 'required|integer|min:1',
-        'users' => 'array',
+    $validatedData = $request->validate([
+        'name' => 'sometimes|required|string|max:255',
+        'status' => 'sometimes|required|in:preparing,ready,dispatched',
+        'dispatch_date' => 'sometimes|required|date',
+        'delivery_date' => 'sometimes|required|date|after_or_equal:dispatch_date',
+        'is_rating' => 'boolean',
+        'user' => 'required_if:is_rating,true|exists:users,id',
+        'score' => 'required_if:is_rating,true|numeric|min:0|max:5',
+        'items.*.item_id' => 'exists:items,id',
+        'items.*.count' => 'integer|min:1',
         'users.*' => 'exists:users,id',
-    ])->validate();
-
-    // Update campaign with validated data
-    $campaign->update([
-        'name' => $validatedData['name'],
-        'status' => $validatedData['status'],
-        'dispatch_date' => $validatedData['dispatch_date'],
-        'delivery_date' => $validatedData['delivery_date'],
     ]);
 
-    // Process and attach items with additional attributes
-    if (!empty($validatedData['items'])) {
+    // UPDATING RATING for this campaign
+    if ($request['is_rating']) {
+        
+        $campaign->users()->syncWithoutDetaching([$request['user'] => ['score' => $request['score']]]);
+        return response()->json([
+            'message' => 'Rating updated successfully'
+        ]);
+
+    } else {
+        $campaign->update($validatedData);
+        
         // UPDATING PIVOT (campaign_item) TABLE WITH EXTRA FIELD
         // Formatting the data as we need in the sync function, array with item_id as key, and value as another array with key 'field_name' => field_value
         // $payload = [
@@ -183,20 +184,25 @@ Route::put('/campaigns/{campaign}', function(Request $request, Campaign $campaig
         //              5 => ['count' => 3],
         //              8 => ['count' => 7],
         // ];
+
+        $items = $request->items;
         $payload = [];
-        foreach ($validatedData['items'] as $item) {
+        
+        foreach ($items as $item) {
             $payload[$item['item_id']] = ['count' => $item['count']];
-        }
-        $campaign->items()->sync($payload); // Use sync to update existing relations
-    }
+        };
+        $campaign->items()->sync($payload);
+        //------------------------------
 
-    // Sync users if provided
-    if (!empty($validatedData['users'])) {
-        $campaign->users()->sync($validatedData['users']);
-    }
+        // UPDATING USERS ATTACHED TO THIS CAMPAIGN
+        $users = $request->users;
+        $campaign->users()->sync($users);
+        //-----------------
 
+
+        return redirect()->route('campaigns.index');
+    }
     return response()->json($campaign);
-
 });
 
 // DELETE CAMPAIGN
